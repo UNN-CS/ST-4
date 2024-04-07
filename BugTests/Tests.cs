@@ -5,7 +5,6 @@ namespace BugTests
     [TestClass]
     public class Tests
     {
-
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void close_from_open()
