@@ -82,4 +82,5 @@ public class UnitTest1
         bug.Assign();
         Assert.AreEqual(Bug.State.Assigned, bug.getState());
     }
+    
 }
