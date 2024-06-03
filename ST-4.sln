@@ -3,12 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugPro", "BugPro\BugPro.csproj", "{EB2DA2AA-13E3-4F73-BAA8-EF3AAF6E1A5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTests", "BugTests\BugTests.csproj", "{5A092E70-51C2-4D00-9B15-D6E91479F82C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB2DA2AA-13E3-4F73-BAA8-EF3AAF6E1A5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB2DA2AA-13E3-4F73-BAA8-EF3AAF6E1A5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB2DA2AA-13E3-4F73-BAA8-EF3AAF6E1A5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB2DA2AA-13E3-4F73-BAA8-EF3AAF6E1A5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A092E70-51C2-4D00-9B15-D6E91479F82C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A092E70-51C2-4D00-9B15-D6E91479F82C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A092E70-51C2-4D00-9B15-D6E91479F82C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A092E70-51C2-4D00-9B15-D6E91479F82C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {69D817B1-CC34-4A3C-AC15-28B5C3513980}
 	EndGlobalSection
 EndGlobal
