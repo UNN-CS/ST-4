@@ -8,24 +8,26 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTests", "BugTests\BugTests.csproj", "{B8A2B88D-168A-4881-9444-5BD974764C25}"
 EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{614853B1-C53A-45C5-92DE-01FA6A864F2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{614853B1-C53A-45C5-92DE-01FA6A864F2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{614853B1-C53A-45C5-92DE-01FA6A864F2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{614853B1-C53A-45C5-92DE-01FA6A864F2C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05552947-F48B-4B41-8620-71520687887E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05552947-F48B-4B41-8620-71520687887E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05552947-F48B-4B41-8620-71520687887E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05552947-F48B-4B41-8620-71520687887E}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {59D2CDB9-C5C7-44E5-9DA9-CF81A3FB9F4C}
-	EndGlobalSection
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Debug|Any CPU = Debug|Any CPU
+        Release|Any CPU = Release|Any CPU
+    EndGlobalSection
+    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        {614853B1-C53A-45C5-92DE-01FA6A864F2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {614853B1-C53A-45C5-92DE-01FA6A864F2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {614853B1-C53A-45C5-92DE-01FA6A864F2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {614853B1-C53A-45C5-92DE-01FA6A864F2C}.Release|Any CPU.Build.0 = Release|Any CPU
+        {05552947-F48B-4B41-8620-71520687887E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {05552947-F48B-4B41-8620-71520687887E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {05552947-F48B-4B41-8620-71520687887E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {05552947-F48B-4B41-8620-71520687887E}.Release|Any CPU.Build.0 = Release|Any CPU
+    EndGlobalSection
+    GlobalSection(SolutionProperties) = preSolution
+        HideSolutionNode = FALSE
+    EndGlobalSection
+    GlobalSection(ExtensibilityGlobals) = postSolution
+        SolutionGuid = {59D2CDB9-C5C7-44E5-9DA9-CF81A3FB9F4C}
+    EndGlobalSection
+    Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "BugTests\Tests.cs", "{NEW_PROJECT_GUID}"
+    EndProject
 EndGlobal
