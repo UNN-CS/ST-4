@@ -47,7 +47,7 @@ public class Bug
             .Permit(Trigger.StartWork, State.InProgress)
             .Permit(Trigger.Close, State.Closed);
 
-        // Состояние Rejected – терминальное (переходов нет)
+       
     }
 
     // Метод для выполнения действия; если переход недопустим, исключение пробрасывается
