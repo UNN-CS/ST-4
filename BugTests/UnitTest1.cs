@@ -83,7 +83,6 @@ namespace BugTests
             bug.Defer();
             bug.Close();
         }
-
         [TestMethod]
         public void Reopen_FromClosed_ShouldChangeToReopened()
         {
