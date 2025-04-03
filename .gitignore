@@ -1,0 +1,45 @@
+# Файлы сборки
+bin/
+obj/
+
+# Папки сборки ReSharper и Rider
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Логи
+*.log
+
+# Папки тестов с результатами
+TestResults/
+
+# Папки, создаваемые Visual Studio
+.vs/
+.vscode/
+
+# Файлы автогенерации
+*.generated.cs
+
+# Секреты и настройки локального компьютера
+*.env
+*.launchSettings.json
+
+# Ненужные временные файлы
+*.tmp
+*.temp
+*.bak
+*.old
+
+# Игнорируем пакеты (если используешь nuget restore)
+packages/
+*.nupkg
+
+# Mac OS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
