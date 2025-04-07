@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "ZFPNMcnExcM=",
+  "success": true,
+  "projectFilePath": "D:\\WORK ARTEM\\QA_UNN\\ST-4\\BugPro\\BugPro.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\tar88\\.nuget\\packages\\stateless\\5.17.0\\stateless.5.17.0.nupkg.sha512"
+  ],
+  "logs": []
+}
