@@ -1,9 +1,0 @@
-C:\Users\andre\OneDrive\Рабочий стол\proekt\ST-4\BugPro\bin\Debug\BugPro.exe.config
-C:\Users\andre\OneDrive\Рабочий стол\proekt\ST-4\BugPro\bin\Debug\BugPro.exe
-C:\Users\andre\OneDrive\Рабочий стол\proekt\ST-4\BugPro\bin\Debug\BugPro.pdb
-C:\Users\andre\OneDrive\Рабочий стол\proekt\ST-4\BugPro\obj\Debug\BugPro.csproj.AssemblyReference.cache
-C:\Users\andre\OneDrive\Рабочий стол\proekt\ST-4\BugPro\obj\Debug\BugPro.csproj.CoreCompileInputs.cache
-C:\Users\andre\OneDrive\Рабочий стол\proekt\ST-4\BugPro\obj\Debug\BugPro.exe
-C:\Users\andre\OneDrive\Рабочий стол\proekt\ST-4\BugPro\obj\Debug\BugPro.pdb
-C:\Users\andre\OneDrive\Рабочий стол\proekt\ST-4\BugPro\bin\Debug\Stateless.dll
-C:\Users\andre\OneDrive\Рабочий стол\proekt\ST-4\BugPro\obj\Debug\BugPro.csproj.CopyComplete
