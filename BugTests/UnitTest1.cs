@@ -192,5 +192,16 @@ namespace BugTests
             bug.Defer();
             bug.Close();
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestInvalidDeferFromReopened()
+        {
+            var bug = new Bug(Bug.State.Open);
+            bug.Assign();
+            bug.Close();
+            bug.Reopen();
+            bug.Defer();
+        }
     }
 }
