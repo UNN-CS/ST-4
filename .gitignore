@@ -1,0 +1,50 @@
+## Build files
+bin/
+obj/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+## Visual Studio Code
+.vscode/
+
+## Rider
+.idea/
+
+## DotNet-specific
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+## Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+## VS for Mac
+.vscode/
+.idea/
+
+## Test Results
+TestResults/
+
+## Auto-generated files
+*.generated.cs
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+*.nuspec
+
+## Logs
+*.log
+
+## Others
+*.dbmdl
+*.bak
+*.tmp
