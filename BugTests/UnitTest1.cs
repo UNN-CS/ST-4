@@ -156,4 +156,4 @@ public class BugTests
         var bug = new Bug(Bug.State.Reopened);
         Assert.AreEqual(Bug.State.Reopened, bug.GetState());
     }
-} // end
+}
