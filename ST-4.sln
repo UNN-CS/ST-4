@@ -3,12 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugPro", "BugPro\BugPro.csproj", "{57385FC8-F81C-43A3-A725-FEA493684BC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTests", "BugTests\BugTests.csproj", "{EDF45549-6BD3-4547-AC6F-E837222B4891}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57385FC8-F81C-43A3-A725-FEA493684BC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57385FC8-F81C-43A3-A725-FEA493684BC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57385FC8-F81C-43A3-A725-FEA493684BC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57385FC8-F81C-43A3-A725-FEA493684BC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDF45549-6BD3-4547-AC6F-E837222B4891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDF45549-6BD3-4547-AC6F-E837222B4891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDF45549-6BD3-4547-AC6F-E837222B4891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDF45549-6BD3-4547-AC6F-E837222B4891}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE0783BD-C932-465E-8353-CE45384DD7BC}
 	EndGlobalSection
 EndGlobal
