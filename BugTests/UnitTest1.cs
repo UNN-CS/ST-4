@@ -128,67 +128,32 @@ public class UnitTest1
     public void TestThrowsCloseFromOpen()
     {
         var bug = new Bug(Bug.State.Open);
-        try
-        {
-            bug.Close();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Close());
     }
     [TestMethod]
     public void TestThrowsDeferFromOpen()
     {
         var bug = new Bug(Bug.State.Open);
-        try
-        {
-            bug.Defer();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Defer());
     }
     [TestMethod]
     public void TestThrowsReopenFromOpen()
     {
         var bug = new Bug(Bug.State.Open);
-        try
-        {
-            bug.Reopen();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Reopen());
     }
     [TestMethod]
     public void TestThrowsResolveFromOpen()
     {
         var bug = new Bug(Bug.State.Open);
-        try
-        {
-            bug.Resolve();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Resolve());
     }
     [TestMethod]
     public void TestThrowsReopenFromAssign()
     {
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
-        try
-        {
-            bug.Reopen();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Reopen());
     }
     [TestMethod]
     public void TestThrowsAssignFromClose()
@@ -196,14 +161,7 @@ public class UnitTest1
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
         bug.Close();
-        try
-        {
-            bug.Assign();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Assign());
     }
     [TestMethod]
     public void TestThrowsDeferFromClose()
@@ -211,14 +169,7 @@ public class UnitTest1
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
         bug.Close();
-        try
-        {
-            bug.Defer();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Defer());
     }
     [TestMethod]
     public void TestThrowsResolveFromClose()
@@ -226,14 +177,7 @@ public class UnitTest1
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
         bug.Close();
-        try
-        {
-            bug.Resolve();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Resolve());
     }
     [TestMethod]
     public void TestThrowsAssignFromDefer()
@@ -241,14 +185,7 @@ public class UnitTest1
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
         bug.Defer();
-        try
-        {
-            bug.Assign();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Assign());
     }
     [TestMethod]
     public void TestThrowsCloseFromDefer()
@@ -256,14 +193,7 @@ public class UnitTest1
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
         bug.Defer();
-        try
-        {
-            bug.Close();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Close());
     }
     [TestMethod]
     public void TestThrowsReopenFromDefer()
@@ -271,14 +201,7 @@ public class UnitTest1
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
         bug.Defer();
-        try
-        {
-            bug.Reopen();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Reopen());
     }
     [TestMethod]
     public void TestThrowsResolveFromDefer()
@@ -286,14 +209,7 @@ public class UnitTest1
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
         bug.Defer();
-        try
-        {
-            bug.Resolve();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Resolve());
     }
     [TestMethod]
     public void TestThrowsCloseFromReopen()
@@ -302,14 +218,7 @@ public class UnitTest1
         bug.Assign();
         bug.Close();
         bug.Reopen();
-        try
-        {
-            bug.Close();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Close());
     }
     [TestMethod]
     public void TestThrowsDeferFromReopen()
@@ -318,14 +227,7 @@ public class UnitTest1
         bug.Assign();
         bug.Close();
         bug.Reopen();
-        try
-        {
-            bug.Defer();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Defer());
     }
     [TestMethod]
     public void TestThrowsAssignFromResolve()
@@ -335,14 +237,7 @@ public class UnitTest1
         bug.Close();
         bug.Reopen();
         bug.Resolve();
-        try
-        {
-            bug.Assign();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        Assert.Throws<Exception>(() => bug.Assign());
     }
     [TestMethod]
     public void TestThrowsDeferFromResolve()
