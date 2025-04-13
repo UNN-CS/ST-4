@@ -10,7 +10,6 @@ public class UnitTest1
     {
         var bug = new Bug(Bug.State.Open);
         Assert.AreEqual(bug.getState(), Bug.State.Open);
-        Console.WriteLine(bug.getState());
     }
     [TestMethod]
     public void TestAssignFromOpen()
@@ -18,7 +17,6 @@ public class UnitTest1
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
         Assert.AreEqual(bug.getState(), Bug.State.Assigned);
-        Console.WriteLine(bug.getState());
     }
     [TestMethod]
     public void TestDeferFromAssign()
@@ -27,7 +25,6 @@ public class UnitTest1
         bug.Assign();
         bug.Defer();
         Assert.AreEqual(bug.getState(), Bug.State.Defered);
-        Console.WriteLine(bug.getState());
     }
     [TestMethod]
     public void TestCloseFromAssign()
@@ -139,7 +136,6 @@ public class UnitTest1
         {
             Assert.AreEqual(bug.getState(), Bug.State.Open);
         }
-        Console.WriteLine(bug.getState());
     }
     [TestMethod]
     public void TestThrowsDeferFromOpen()
