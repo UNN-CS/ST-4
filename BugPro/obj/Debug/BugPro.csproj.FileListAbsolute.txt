@@ -1,0 +1,10 @@
+D:\study\6semester\testirov\lab4\ST-4\BugPro\bin\Debug\BugPro.exe.config
+D:\study\6semester\testirov\lab4\ST-4\BugPro\bin\Debug\BugPro.exe
+D:\study\6semester\testirov\lab4\ST-4\BugPro\bin\Debug\BugPro.pdb
+D:\study\6semester\testirov\lab4\ST-4\BugPro\bin\Debug\Stateless.dll
+D:\study\6semester\testirov\lab4\ST-4\BugPro\bin\Debug\Stateless.xml
+D:\study\6semester\testirov\lab4\ST-4\BugPro\obj\Debug\BugPro.csproj.AssemblyReference.cache
+D:\study\6semester\testirov\lab4\ST-4\BugPro\obj\Debug\BugPro.csproj.CoreCompileInputs.cache
+D:\study\6semester\testirov\lab4\ST-4\BugPro\obj\Debug\BugPro.csproj.Up2Date
+D:\study\6semester\testirov\lab4\ST-4\BugPro\obj\Debug\BugPro.exe
+D:\study\6semester\testirov\lab4\ST-4\BugPro\obj\Debug\BugPro.pdb
