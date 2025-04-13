@@ -1,3 +1,4 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BugTests
 {
@@ -24,7 +25,7 @@ namespace BugTests
         public void Assign_FromAssigned_StateRemainsAssigned()
         {
             var bug = new Bug(Bug.State.Assigned);
-            bug.Assign(); // Игнорируется
+            bug.Assign();
             Assert.AreEqual(Bug.State.Assigned, bug.getState());
         }
 
@@ -33,7 +34,7 @@ namespace BugTests
         public void Close_FromOpen_ThrowsException()
         {
             var bug = new Bug(Bug.State.Open);
-            bug.Close(); // Недопустимый переход
+            bug.Close();
         }
 
         [TestMethod]
@@ -167,7 +168,7 @@ namespace BugTests
         public void Close_FromClosed_ThrowsException()
         {
             var bug = new Bug(Bug.State.Closed);
-            bug.Close(); // Закрытый баг нельзя закрыть повторно
+            bug.Close();
         }
     }
 }
