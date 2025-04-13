@@ -352,7 +352,6 @@ public class UnitTest1
         bug.Close();
         bug.Reopen();
         bug.Resolve();
-        bug.Defer();
-        Assert.Fail();
+        Assert.Throws<Exception>(() => bug.Defer());
     }
 }
