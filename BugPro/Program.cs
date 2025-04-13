@@ -31,7 +31,7 @@ public class Bug
 
         sm.Configure(State.Verified)
             .Permit(Trigger.Close, State.Closed)
-            .Permit(Trigger.Defer, State.Defered); // Добавлен переход в Defered
+            .Permit(Trigger.Defer, State.Defered); 
     }
 
     public void Close()
