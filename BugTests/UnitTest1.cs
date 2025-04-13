@@ -352,13 +352,7 @@ public class UnitTest1
         bug.Close();
         bug.Reopen();
         bug.Resolve();
-        try
-        {
-            bug.Defer();
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(bug.getState(), Bug.State.Open);
-        }
+        bug.Defer();
+        Assert.Fail();
     }
 }
