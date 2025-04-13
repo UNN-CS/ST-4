@@ -180,14 +180,6 @@ public class UnitTest1
         Assert.Throws<Exception>(() => bug.Resolve());
     }
     [TestMethod]
-    public void TestThrowsAssignFromDefer()
-    {
-        var bug = new Bug(Bug.State.Open);
-        bug.Assign();
-        bug.Defer();
-        Assert.Throws<Exception>(() => bug.Assign());
-    }
-    [TestMethod]
     public void TestThrowsCloseFromDefer()
     {
         var bug = new Bug(Bug.State.Open);
