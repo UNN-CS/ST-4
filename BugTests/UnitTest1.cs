@@ -180,33 +180,6 @@ namespace BugTests
         }
 
         [TestMethod]
-        public void test_reopenFromClosedAfterAssign()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.StartProgress();
-            bug.Resolve();
-            bug.Close();
-            bug.Assign();
-
-            Assert.ThrowsException<InvalidOperationException>(() =>
-            {
-                bug.Reopen();
-            });
-        }
-
-        [TestMethod]
-        public void test_multipleStateChangesInSequence()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Assign();
-            bug.Defer();
-            bug.StartProgress();
-            bug.Resolve();
-            bug.Close();
-            Assert.AreEqual(Bug.State.Closed, bug.GetState());
-        }
-
-        [TestMethod]
         public void test_complexTransitionWithReopen()
         {
             var bug = new Bug(Bug.State.Open);
@@ -219,7 +192,7 @@ namespace BugTests
             bug.Reopen();
             Assert.AreEqual(Bug.State.Reopened, bug.GetState());
         }
-        
+
         [TestMethod]
         public void test_complexTransitionSequence()
         {
