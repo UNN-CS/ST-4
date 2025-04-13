@@ -66,6 +66,7 @@ public class Program
         var bug = new Bug(Bug.State.Open);
         bug.Assign();
         bug.Close();
+        bug.Reopen();
         bug.Assign();
         bug.Defer();
         bug.Assign();
