@@ -1,0 +1,118 @@
+{
+  "version": 3,
+  "targets": {
+    "net9.0": {
+      "Stateless/5.17.0": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Stateless.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Stateless.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Stateless/5.17.0": {
+      "sha512": "SG1EPlbLUorTbf1m/5g75kTHDWIsX0GHxHKyVbH0Ws89KRrm+tAzVqt83q6Rmvkk3ZXgAXOJYCVXdd8cMVFyRQ==",
+      "type": "package",
+      "path": "stateless/5.17.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "Stateless.png",
+        "lib/net462/Stateless.dll",
+        "lib/net462/Stateless.xml",
+        "lib/net8.0/Stateless.dll",
+        "lib/net8.0/Stateless.xml",
+        "lib/net9.0/Stateless.dll",
+        "lib/net9.0/Stateless.xml",
+        "lib/netstandard2.0/Stateless.dll",
+        "lib/netstandard2.0/Stateless.xml",
+        "stateless.5.17.0.nupkg.sha512",
+        "stateless.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net9.0": [
+      "Stateless >= 5.17.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\Knight\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\Knight\\Desktop\\Tests\\ST-4\\BugPro\\BugPro.csproj",
+      "projectName": "BugPro",
+      "projectPath": "C:\\Users\\Knight\\Desktop\\Tests\\ST-4\\BugPro\\BugPro.csproj",
+      "packagesPath": "C:\\Users\\Knight\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Knight\\Desktop\\Tests\\ST-4\\BugPro\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\Knight\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net9.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.200"
+    },
+    "frameworks": {
+      "net9.0": {
+        "targetAlias": "net9.0",
+        "dependencies": {
+          "Stateless": {
+            "target": "Package",
+            "version": "[5.17.0, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
