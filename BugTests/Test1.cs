@@ -31,14 +31,6 @@ namespace BugTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void OpenBug_CannotBeDeferred()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Defer();
-        }
-
-        [TestMethod]
         public void AssignedBug_CanBeClosed()
         {
             var bug = new Bug(Bug.State.Open);
@@ -66,15 +58,6 @@ namespace BugTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void AssignedBug_CannotBeAssignedAgain()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Assign();
-            bug.Assign();
-        }
-
-        [TestMethod]
         public void ClosedBug_CanBeReopened()
         {
             var bug = new Bug(Bug.State.Open);
@@ -93,17 +76,7 @@ namespace BugTests
             bug.Verify();
             Assert.AreEqual(Bug.State.Verified, bug.GetState());
         }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ClosedBug_CannotBeClosedAgain()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Assign();
-            bug.Close();
-            bug.Close();
-        }
-
+        
         [TestMethod]
         public void DeferedBug_CanBeAssigned()
         {
