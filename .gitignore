@@ -1,0 +1,5 @@
+/.vs
+/lib/bin
+/lib/obj
+/BugTests/bin
+/BugTests/obj
