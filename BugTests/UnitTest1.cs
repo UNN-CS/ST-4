@@ -86,7 +86,7 @@ namespace BugTests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void DeferBug()
+        public void DefBug()
         {
             var bug = new Bug(Bug.State.Closed);
             bug.Defer();
@@ -94,7 +94,7 @@ namespace BugTests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void ReopenBug()
+        public void ReBug()
         {
             var bug = new Bug(Bug.State.Reopened);
             bug.Reopen();
