@@ -104,7 +104,7 @@ public class UnitTest1
         bug.Defer();
         Assert.AreEqual(Bug.State.Defered, bug.getState());
     }
-    [TestMethod]
+    [TestMethod] 
     public void TestGetState8()
     {
         var bug = new Bug(Bug.State.Open);
