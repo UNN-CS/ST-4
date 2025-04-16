@@ -25,11 +25,13 @@ jobs:
       run: dotnet build --configuration Release --no-restore
       
     - name: Run tests with detailed output
-      run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx" --verbosity detailed
+      run: |
+        cd BugTests
+        dotnet test --configuration Release --no-build --logger "console;verbosity=detailed"
       
-    - name: Upload test results
+    - name: Publish test results
       uses: actions/upload-artifact@v3
       if: always()
       with:
-        name: Test Results
-        path: '**/TestResults/test-results.trx'
+        name: Test-Results
+        path: BugTests/TestResults/
