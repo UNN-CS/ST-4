@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\User\\ST-4\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\ST-4\\TextFile1.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:TextFile1.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{EF7839DA-115F-42DC-B1A3-0EA8EDF1150A}|\u042D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u0440\u0435\u0448\u0435\u043D\u0438\u044F{EF7839DA-115F-42DC-B1A3-0EA8EDF1150A}|C:\\Users\\User\\ST-4\\TextFile1.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{EF7839DA-115F-42DC-B1A3-0EA8EDF1150A}|\u042D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u0440\u0435\u0448\u0435\u043D\u0438\u044F{EF7839DA-115F-42DC-B1A3-0EA8EDF1150A}|solutionrelative:TextFile1.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -32,8 +32,10 @@
               "RelativeDocumentMoniker": "TextFile1.txt",
               "ToolTip": "C:\\Users\\User\\ST-4\\TextFile1.txt",
               "RelativeToolTip": "TextFile1.txt",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAqwDEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2025-04-16T10:24:24.035Z"
+              "WhenOpened": "2025-04-16T10:24:24.035Z",
+              "EditorCaption": ""
             }
           ]
         }
