@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Stateless;
+using System;
 
 namespace BugTests
 {
@@ -7,73 +7,96 @@ namespace BugTests
     public class BugTests
     {
         [TestMethod]
-        public void NewBug_ShouldBeInOpenState()
-        {
-            var bug = new Bug(Bug.State.Open);
-            Assert.AreEqual(Bug.State.Open, bug.GetState());
-        }
-
-        [TestMethod]
-        public void Assign_FromOpen_ShouldChangeToAssigned()
+        public void Test_OpenToAssigned()
         {
             var bug = new Bug(Bug.State.Open);
             bug.Assign();
-            Assert.AreEqual(Bug.State.Assigned, bug.GetState());
+            Assert.AreEqual(Bug.State.Assigned, bug.getState());
         }
 
         [TestMethod]
-        public void StartProgress_FromOpen_ShouldChangeToInProgress()
+        public void Test_OpenToInProgress()
         {
             var bug = new Bug(Bug.State.Open);
             bug.StartProgress();
-            Assert.AreEqual(Bug.State.InProgress, bug.GetState());
+            Assert.AreEqual(Bug.State.InProgress, bug.getState());
         }
 
         [TestMethod]
-        public void MarkAsDone_FromInProgress_ShouldChangeToInReview()
+        public void Test_AssignedToClosed()
         {
-            var bug = new Bug(Bug.State.Open);
-            bug.StartProgress();
-            bug.MarkAsDone();
-            Assert.AreEqual(Bug.State.InReview, bug.GetState());
-        }
-
-        [TestMethod]
-        public void Close_FromInReview_ShouldChangeToClosed()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.StartProgress();
-            bug.MarkAsDone();
+            var bug = new Bug(Bug.State.Assigned);
             bug.Close();
-            Assert.AreEqual(Bug.State.Closed, bug.GetState());
+            Assert.AreEqual(Bug.State.Closed, bug.getState());
         }
 
         [TestMethod]
-        public void Verify_FromClosed_ShouldChangeToVerified()
+        public void Test_AssignedToDeferred()
         {
-            var bug = new Bug(Bug.State.Open);
-            bug.StartProgress();
-            bug.MarkAsDone();
-            bug.Close();
-            bug.Verify();
-            Assert.AreEqual(Bug.State.Verified, bug.GetState());
+            var bug = new Bug(Bug.State.Assigned);
+            bug.Defer();
+            Assert.AreEqual(Bug.State.Deferred, bug.getState());
         }
 
         [TestMethod]
-        public void Reopen_FromVerified_ShouldChangeToReopened()
+        public void Test_InProgressToClosed()
         {
-            var bug = new Bug(Bug.State.Open);
-            bug.StartProgress();
-            bug.MarkAsDone();
+            var bug = new Bug(Bug.State.InProgress);
             bug.Close();
-            bug.Verify();
-            bug.Reopen();
-            Assert.AreEqual(Bug.State.Reopened, bug.GetState());
+            Assert.AreEqual(Bug.State.Closed, bug.getState());
+        }
+
+        [TestMethod]
+        public void Test_InProgressToDeferred()
+        {
+            var bug = new Bug(Bug.State.InProgress);
+            bug.Defer();
+            Assert.AreEqual(Bug.State.Deferred, bug.getState());
+        }
+
+        [TestMethod]
+        public void Test_DeferredToAssigned()
+        {
+            var bug = new Bug(Bug.State.Deferred);
+            bug.Assign();
+            Assert.AreEqual(Bug.State.Assigned, bug.getState());
+        }
+
+        [TestMethod]
+        public void Test_ClosedToAssigned()
+        {
+            var bug = new Bug(Bug.State.Closed);
+            bug.Assign();
+            Assert.AreEqual(Bug.State.Assigned, bug.getState());
+        }
+
+        [TestMethod]
+        public void Test_ClosedToInProgress()
+        {
+            var bug = new Bug(Bug.State.Closed);
+            bug.MarkAsDone();
+            Assert.AreEqual(Bug.State.InProgress, bug.getState());
+        }
+
+        [TestMethod]
+        public void Test_InReviewToClosed()
+        {
+            var bug = new Bug(Bug.State.InReview);
+            bug.MarkAsDone();
+            Assert.AreEqual(Bug.State.Closed, bug.getState());
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Close_FromOpen_ShouldThrowException()
+        public void Test_InvalidTransition_OpenToDefer()
+        {
+            var bug = new Bug(Bug.State.Open);
+            bug.Defer();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Test_InvalidTransition_OpenToClose()
         {
             var bug = new Bug(Bug.State.Open);
             bug.Close();
@@ -81,153 +104,72 @@ namespace BugTests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void MarkAsDone_FromOpen_ShouldThrowException()
+        public void Test_InvalidTransition_OpenToInReview()
         {
             var bug = new Bug(Bug.State.Open);
             bug.MarkAsDone();
-        }
-
-        [TestMethod]
-        public void Reject_FromOpen_ShouldChangeToRejected()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Reject();
-            Assert.AreEqual(Bug.State.Rejected, bug.GetState());
-        }
-
-        [TestMethod]
-        public void Assign_FromRejected_ShouldChangeToAssigned()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Reject();
-            bug.Assign();
-            Assert.AreEqual(Bug.State.Assigned, bug.GetState());
-        }
-
-        [TestMethod]
-        public void Defer_FromAssigned_ShouldChangeToDeferred()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Assign();
-            bug.Defer();
-            Assert.AreEqual(Bug.State.Deferred, bug.GetState());
-        }
-
-        [TestMethod]
-        public void Assign_FromDeferred_ShouldChangeToAssigned()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Assign();
-            bug.Defer();
-            bug.Assign();
-            Assert.AreEqual(Bug.State.Assigned, bug.GetState());
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Close_FromDeferred_ShouldThrowException()
+        public void Test_InvalidTransition_AssignedToStartProgress()
         {
-            var bug = new Bug(Bug.State.Open);
-            bug.Assign();
-            bug.Defer();
-            bug.Close();
-        }
-
-        [TestMethod]
-        public void Reject_FromAssigned_ShouldChangeToRejected()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Assign();
-            bug.Reject();
-            Assert.AreEqual(Bug.State.Rejected, bug.GetState());
-        }
-
-        [TestMethod]
-        public void Reject_FromInProgress_ShouldChangeToRejected()
-        {
-            var bug = new Bug(Bug.State.Open);
+            var bug = new Bug(Bug.State.Assigned);
             bug.StartProgress();
-            bug.Reject();
-            Assert.AreEqual(Bug.State.Rejected, bug.GetState());
         }
 
         [TestMethod]
-        public void MultipleAssign_ShouldBeIgnored()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.Assign();
-            bug.Assign(); // Should be ignored
-            Assert.AreEqual(Bug.State.Assigned, bug.GetState());
-        }
-
-        [TestMethod]
-        public void ComplexWorkflow1_ShouldWorkCorrectly()
-        {
-            var bug = new Bug(Bug.State.Open);
-            bug.StartProgress();
-            bug.MarkAsDone();
-            bug.Close();
-            bug.Verify();
-            Assert.AreEqual(Bug.State.Verified, bug.GetState());
-        }
-
-        [TestMethod]
-        public void ComplexWorkflow2_ShouldWorkCorrectly()
+        public void Test_MultipleTransitions_1()
         {
             var bug = new Bug(Bug.State.Open);
             bug.Assign();
             bug.Defer();
             bug.Assign();
-            bug.StartProgress();
-            bug.MarkAsDone();
             bug.Close();
-            Assert.AreEqual(Bug.State.Closed, bug.GetState());
+            Assert.AreEqual(Bug.State.Closed, bug.getState());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void InvalidTransition_DeferredToInProgress_ShouldThrow()
+        public void Test_MultipleTransitions_2()
         {
             var bug = new Bug(Bug.State.Open);
-            bug.Assign();
+            bug.StartProgress();
             bug.Defer();
-            bug.StartProgress();
+            bug.Assign();
+            bug.Close();
+            Assert.AreEqual(Bug.State.Closed, bug.getState());
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void InvalidTransition_ReopenedToInProgress_ShouldThrow()
+        public void Test_InvalidTransition_DeferredToStartProgress()
         {
-            var bug = new Bug(Bug.State.Open);
-            bug.Assign();
-            bug.Close();
-            bug.Reopen();
+            var bug = new Bug(Bug.State.Deferred);
             bug.StartProgress();
         }
 
         [TestMethod]
-        public void FullLifecycle_ShouldWorkCorrectly()
+        public void Test_IgnoreTransition_AssignedAssign()
         {
-            var bug = new Bug(Bug.State.Open);
-            Assert.AreEqual(Bug.State.Open, bug.GetState());
-
-            bug.StartProgress();
-            Assert.AreEqual(Bug.State.InProgress, bug.GetState());
-
-            bug.MarkAsDone();
-            Assert.AreEqual(Bug.State.InReview, bug.GetState());
-
-            bug.Close();
-            Assert.AreEqual(Bug.State.Closed, bug.GetState());
-
-            bug.Verify();
-            Assert.AreEqual(Bug.State.Verified, bug.GetState());
-
-            bug.Reopen();
-            Assert.AreEqual(Bug.State.Reopened, bug.GetState());
-
+            var bug = new Bug(Bug.State.Assigned);
             bug.Assign();
-            Assert.AreEqual(Bug.State.Assigned, bug.GetState());
+            Assert.AreEqual(Bug.State.Assigned, bug.getState());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Test_InvalidTransition_ClosedToDefer()
+        {
+            var bug = new Bug(Bug.State.Closed);
+            bug.Defer();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Test_InvalidTransition_InReviewAssign()
+        {
+            var bug = new Bug(Bug.State.InReview);
+            bug.Assign();
         }
     }
 }
