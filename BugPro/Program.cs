@@ -11,8 +11,7 @@ public class Bug
         sm = new StateMachine<State, Trigger>(state);
         
         sm.Configure(State.Open)
-            .Permit(Trigger.Assign, State.Assigned)
-            .Ignore(Trigger.Close);
+            .Permit(Trigger.Assign, State.Assigned);
         
         sm.Configure(State.Assigned)
             .Permit(Trigger.Close, State.Closed)
