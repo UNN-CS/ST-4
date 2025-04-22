@@ -12,7 +12,6 @@ public class Bug
         
         sm.Configure(State.Open)
             .Permit(Trigger.Assign, State.Assigned)
-            .Ignore(Trigger.Close);
         
         sm.Configure(State.Assigned)
             .Permit(Trigger.Close, State.Closed)
