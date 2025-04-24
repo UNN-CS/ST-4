@@ -107,4 +107,66 @@ public sealed class BugTests
         bug.Select();
         Assert.AreEqual(Bug.State.Selected, bug.getState());
     }
+
+    [TestMethod]
+    public void OpenToSelectedThrowsException()
+    {
+        var bug = new Bug(Bug.State.Open);
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Select());
+    }
+
+    [TestMethod]
+    public void OpenToDeferThrowsException()
+    {
+        var bug = new Bug(Bug.State.Open);
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Defer());
+    }
+
+    [TestMethod]
+    public void CanReassignFromSelectedToClosedThenAssign()
+    {
+        var bug = new Bug(Bug.State.Selected);
+        bug.Close();
+        bug.Assign();
+        Assert.AreEqual(Bug.State.Assigned, bug.getState());
+    }
+
+    [TestMethod]
+    public void ReassignAfterDefer()
+    {
+        var bug = new Bug(Bug.State.Assigned);
+        bug.Defer();
+        bug.Assign();
+        bug.Select();
+        Assert.AreEqual(Bug.State.Selected, bug.getState());
+    }
+
+    [TestMethod]
+    public void AssignAfterCloseThrowsThenValidAssign()
+    {
+        var bug = new Bug(Bug.State.Open);
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Close());
+        bug.Assign();
+        Assert.AreEqual(Bug.State.Assigned, bug.getState());
+    }
+
+    [TestMethod]
+    public void FullValidLifecycle()
+    {
+        var bug = new Bug(Bug.State.Open);
+        bug.Assign();
+        bug.Select();
+        bug.Close();
+        Assert.AreEqual(Bug.State.Closed, bug.getState());
+    }
+
+    [TestMethod]
+    public void InvalidCloseThenDeferedTransition()
+    {
+        var bug = new Bug(Bug.State.Defered);
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Close());
+        bug.Assign();
+        bug.Close();
+        Assert.AreEqual(Bug.State.Closed, bug.getState());
+    }
 }
