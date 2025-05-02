@@ -1,5 +1,4 @@
-# ST-4 Модульное тестирование в .NET Core с использованием MSTest (C#)
-
+# ST-4 Модульное тестирование в .NET Core с использованием MSTest (C#) и библиотеки Stateless
 
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/UNN-CS/ST-4)
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/UNN-CS/ST-4)
@@ -8,13 +7,12 @@
 
 **по 13.04.2025** ![Relative date](https://img.shields.io/date/1744578000)
 
-
 Данная работа демонстрирует модульное тестирование с помощью фреймворка MSTest на платформе .NET версии 9.x
 Для выполнения работы необходимо добавить ссылку на пакет **Stateless** .NET.
 
 ## Задание №1
 
-В рамках существующего решения (solution) **ST-4** добавить проект **BugPro** в виде консольного приложения и поместить в файл 
+В рамках существующего решения (solution) **ST-4** добавить проект **BugPro** в виде консольного приложения и поместить в файл
 **BugPro/Program.cs** код класса **Bug**.
 
 ```csharp
@@ -36,7 +34,7 @@ public class Bug {
       sm.Configure(State.Closed)
             .Permit(Trigger.Assign, State.Assigned);
       sm.Configure(State.Defered)
-            .Permit(Trigger.Assign, State.Assigned); 
+            .Permit(Trigger.Assign, State.Assigned);
    }
    public void Close() {
       sm.Fire(Trigger.Close);
@@ -44,12 +42,12 @@ public class Bug {
    }
    public void Assign() {
       sm.Fire(Trigger.Assign);
-      Console.WriteLine("Assign");   
+      Console.WriteLine("Assign");
    }
    public void Defer() {
       sm.Fire(Trigger.Defer);
-      Console.WriteLine("Defer");   
-   }   
+      Console.WriteLine("Defer");
+   }
    public State getState() {
       return sm.State;
    }
@@ -76,13 +74,8 @@ public class Program {
 
 Добавить в решение еще один проект **BugTests**, указав тип проекта - **MSTest**. В файл **BugTests/UnitTest1.cs** поместить несколько тестовых методов, тестирующих класс-автомат, описанный в **BugPro/Program.cs**. Количество тестов - не менее 20.
 
-Для реализации бОльшего числа тестов, рекомендуется расширить класс **Bug**, добавив новые состояния и новые функции переходов. Обязательно должны присутствовать тесты, отлавливающие выбрасываемые **Stateless** исключения! 
+Для реализации бОльшего числа тестов, рекомендуется расширить класс **Bug**, добавив новые состояния и новые функции переходов. Обязательно должны присутствовать тесты, отлавливающие выбрасываемые **Stateless** исключения!
 
 ## Примечание
 
 После создания пул-запроса убедиться, что тесты корректно запускаются. Для этого нужно зайти в журнал GH Actions и убедиться, что все тесты запущены и успешно выполнены.
-
-
-
-
-
