@@ -16,7 +16,7 @@ namespace BugPro
             InProgress,
             Verified,
             Rejected
-        }
+        } 
 
         private enum Trigger
         {

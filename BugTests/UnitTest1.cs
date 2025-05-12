@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using BugPro;
-using Stateless;
 
 namespace BugTests
 {
@@ -153,7 +152,7 @@ namespace BugTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Stateless.InvalidOperationException))]
+        [ExpectedException(typeof(System.InvalidOperationException))]
         public void Test_Invalid_Transition_Open_Verify()
         {
             var bug = new Bug(Bug.State.Open);
@@ -161,7 +160,7 @@ namespace BugTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Stateless.InvalidOperationException))]
+        [ExpectedException(typeof(System.InvalidOperationException))]
         public void Test_Invalid_Transition_Closed_Verify()
         {
             var bug = new Bug(Bug.State.Closed);
@@ -169,7 +168,7 @@ namespace BugTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Stateless.InvalidOperationException))]
+        [ExpectedException(typeof(System.InvalidOperationException))]
         public void Test_Invalid_Transition_Resolved_StartWork()
         {
             var bug = new Bug(Bug.State.Resolved);
