@@ -24,7 +24,7 @@ public class UnitTest1
         {
             bug.Close();
         }catch(Exception ex)
-                {
+               {
             Assert.AreNotEqual(bug.getState(), Bug.State.Closed);
         }
     }
@@ -134,7 +134,7 @@ public class UnitTest1
         bug.SetUpEnviroment();
         bug.Assign();
         try { bug.Close(); }catch(Exception e) { Assert.AreEqual(bug.isEnviromentRollUped(), false); }
-           }
+            }
     [TestMethod]
     public void TestMethod15()
     {
@@ -167,7 +167,7 @@ public class UnitTest1
         {
             bug.Close();
         }catch (Exception e) { Assert.AreEqual(bug.isEnviromentRollUped() , false); }
-           }
+            }
     [TestMethod]
     public void TestMethod18()
     {
