@@ -7,6 +7,13 @@
     public sealed class UnitTest1
     {
         [TestMethod]
+        public void Bug_Initialize_New()
+        {
+            var bug = new Bug();
+            Assert.AreEqual(BugState.New, bug.State);
+        }
+
+        [TestMethod]
         public void New_To_Triage()
         {
             var bug = new Bug();
