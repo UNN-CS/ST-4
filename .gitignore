@@ -1,0 +1,20 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+## NuGet
+*.nupkg
+**/packages/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## VS / Rider
+.vs/
+.idea/
+*.DotSettings.user
