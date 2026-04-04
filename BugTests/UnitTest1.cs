@@ -1,4 +1,5 @@
 using BugPro;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BugTests;
 
@@ -209,35 +210,35 @@ public sealed class UnitTest1
     public void Close_FromOpen_ThrowsException()
     {
         var bug = new Bug("test");
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.Close());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Close());
     }
 
     [TestMethod]
     public void Resolve_FromOpen_ThrowsException()
     {
         var bug = new Bug("test");
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.Resolve());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Resolve());
     }
 
     [TestMethod]
     public void Defer_FromOpen_ThrowsException()
     {
         var bug = new Bug("test");
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.Defer());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Defer());
     }
 
     [TestMethod]
     public void StartFix_FromOpen_ThrowsException()
     {
         var bug = new Bug("test");
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.StartFix());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.StartFix());
     }
 
     [TestMethod]
     public void Reopen_FromOpen_ThrowsException()
     {
         var bug = new Bug("test");
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.Reopen());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Reopen());
     }
 
     [TestMethod]
@@ -246,7 +247,7 @@ public sealed class UnitTest1
         var bug = new Bug("test");
         bug.Assign();
         bug.StartFix();
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.Assign());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Assign());
     }
 
     [TestMethod]
@@ -255,7 +256,7 @@ public sealed class UnitTest1
         var bug = new Bug("test");
         bug.Assign();
         bug.StartFix();
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.Close());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Close());
     }
 
     [TestMethod]
@@ -263,7 +264,7 @@ public sealed class UnitTest1
     {
         var bug = new Bug("test");
         bug.Assign();
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.Reopen());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Reopen());
     }
 
     [TestMethod]
@@ -272,7 +273,7 @@ public sealed class UnitTest1
         var bug = new Bug("test");
         bug.Assign();
         bug.MarkNotABug();
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.ReturnToTriage());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.ReturnToTriage());
     }
 
     [TestMethod]
@@ -280,7 +281,7 @@ public sealed class UnitTest1
     {
         var bug = new Bug("test");
         bug.Assign();
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.Assign());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Assign());
     }
 
     [TestMethod]
@@ -289,6 +290,6 @@ public sealed class UnitTest1
         var bug = new Bug("test");
         bug.Assign();
         bug.Defer();
-        Assert.ThrowsExactly<InvalidOperationException>(() => bug.Defer());
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Defer());
     }
 }
