@@ -119,41 +119,35 @@
             Assert.AreEqual(BugState.Duplicate, bug.State);
         }
 
-        // NotABug/WontFix/Duplicate final states, no transitions out of them
+        // NotABug/WontFix/Duplicate ---> OkCheck
         [TestMethod]
-        public void NotABug_cannot_transit()
+        public void NotABug_To_OkCheck()
         {
             var bug = new Bug();
             bug.Fire(BugAction.StartTriage);
             bug.Fire(BugAction.MarkNotABug);
-
-            Assert.IsTrue(bug.IsFinal());
-            Assert.Throws<Exception>(() =>
-                bug.Fire(BugAction.StartTriage));
+            bug.Fire(BugAction.ToOkCheck);
+            Assert.AreEqual(BugState.OkCheck, bug.State);
         }
 
         [TestMethod]
-        public void WontFix_cannot_transit()
+        public void WontFix_To_OkCheck()
         {
             var bug = new Bug();
             bug.Fire(BugAction.StartTriage);
             bug.Fire(BugAction.MarkWontFix);
-
-            Assert.IsTrue(bug.IsFinal());
-            Assert.Throws<Exception>(() =>
-                bug.Fire(BugAction.StartTriage));
+            bug.Fire(BugAction.ToOkCheck);
+            Assert.AreEqual(BugState.OkCheck, bug.State);
         }
 
         [TestMethod]
-        public void Duplicate_cannot_transit()
+        public void Duplicate_To_OkCheck()
         {
             var bug = new Bug();
             bug.Fire(BugAction.StartTriage);
             bug.Fire(BugAction.MarkDuplicate);
-
-            Assert.IsTrue(bug.IsFinal());
-            Assert.Throws<Exception>(() =>
-                bug.Fire(BugAction.StartTriage));
+            bug.Fire(BugAction.ToOkCheck);
+            Assert.AreEqual(BugState.OkCheck, bug.State);
         }
 
         // Fixing ---> NeedMoreInfo

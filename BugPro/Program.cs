@@ -105,11 +105,21 @@
             _machine.Configure(BugState.NeedMoreInfo)
                 .Permit(BugAction.StartFix, BugState.Fixing);
 
+            // Не дефект
+            _machine.Configure(BugState.NotABug)
+                .Permit(BugAction.ToOkCheck, BugState.OkCheck);
+            
+            // Не исправлять
+            _machine.Configure(BugState.WontFix)
+                .Permit(BugAction.ToOkCheck, BugState.OkCheck);
+
+            // Дублирование
+            _machine.Configure(BugState.Duplicate)
+                .Permit(BugAction.ToOkCheck, BugState.OkCheck);
 
             // Не воспроизводимо
             _machine.Configure(BugState.CannotReproduce)
                 .Permit(BugAction.ToOkCheck, BugState.OkCheck);
-
 
             // OK?
             _machine.Configure(BugState.OkCheck)
@@ -132,12 +142,6 @@
             // Переоткрытие -> Разбор
             _machine.Configure(BugState.Reopened)
                 .Permit(BugAction.StartTriage, BugState.Triage);
-
-            // Состояния без выхода (Не дефект, Не исправлять, Дублирование)
-            _machine.Configure(BugState.NotABug);
-            _machine.Configure(BugState.WontFix);
-            _machine.Configure(BugState.Duplicate);
-
 
             _machine.OnTransitioned(t =>
             {
