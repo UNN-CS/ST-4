@@ -81,7 +81,7 @@ namespace BugTests
 
         // Проверка 8: Из состояния "Разбор дефектов" можно указать, что проблема не воспроизводится
         [TestMethod]
-        public void Test08_FromTriageState_MarkCannotReproduce_ShouldMoveToCannotReproduce()
+        public void Test8_FromTriageState_MarkCannotReproduce_ShouldMoveToCannotReproduce()
         {
             _bug.Fire(BugTrigger.AssignToTriage);
             _bug.Fire(BugTrigger.CannotReproduce);
