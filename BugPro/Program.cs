@@ -129,6 +129,9 @@ public class Bug
         _stateMachine.Configure(BugState.Reopened)
             .Permit(BugAction.StartTriage, BugState.InTriage);
 
+        _stateMachine.Configure(BugState.Returned)
+            .Permit(BugAction.StartTriage, BugState.InTriage);
+
         _stateMachine.OnTransitioned(transition =>
             _history.Add(
                 $"Transition from [{transition.Source}] to [{transition.Destination}] with trigger [{transition.Trigger}]"));
@@ -145,9 +148,9 @@ class Program
         PrintBugStatus(bug);
 
         PerformAndPrint(bug, BugAction.StartTriage);
-        PerformAndPrint(bug, BugAction.SetNeedMoreInfo);
         PerformAndPrint(bug, BugAction.StartFixing);
-        PerformAndPrint(bug, BugAction.VerifyIsProblemSolved);
+        PerformAndPrint(bug, BugAction.SetCannotReproduce);
+        PerformAndPrint(bug, BugAction.VerifyIsOK);
         PerformAndPrint(bug, BugAction.Reject);
         PerformAndPrint(bug, BugAction.StartTriage);
         PerformAndPrint(bug, BugAction.StartFixing);
