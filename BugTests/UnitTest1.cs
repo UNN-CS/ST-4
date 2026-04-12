@@ -59,6 +59,25 @@ public class UnitTest1
     }
 
     [TestMethod]
+    public void Triage_HasExpectedPermittedTriggers()
+    {
+        var bug = CreateTriagedBug();
+
+        CollectionAssert.AreEquivalent(
+            new[]
+            {
+                BugTrigger.RequestInfo,
+                BugTrigger.Postpone,
+                BugTrigger.StartFix,
+                BugTrigger.RejectAsNotABug,
+                BugTrigger.RejectAsDuplicate,
+                BugTrigger.RejectAsCannotReproduce,
+                BugTrigger.RejectAsWontFix
+            },
+            bug.PermittedTriggers.ToArray());
+    }
+
+    [TestMethod]
     public void ProvideInfo_FromWaitingForInfo_ReturnsBugToTriage()
     {
         var bug = CreateTriagedBug();
@@ -138,6 +157,17 @@ public class UnitTest1
         bug.Reopen();
 
         Assert.AreEqual(BugState.Reopened, bug.State);
+    }
+
+    [TestMethod]
+    public void StartFix_FromReopened_MovesBugToInProgress()
+    {
+        var bug = CreateClosedBug();
+        bug.Reopen();
+
+        bug.StartFix();
+
+        Assert.AreEqual(BugState.InProgress, bug.State);
     }
 
     [TestMethod]
