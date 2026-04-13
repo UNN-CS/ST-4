@@ -1,111 +1,132 @@
-using System;
 using Stateless;
 
-namespace BugPro
+/// <summary>
+/// Состояния жизненного цикла дефекта по workflow (тестировщик / продукт / разработка).
+/// </summary>
+public enum BugState
 {
-    public enum BugState
+    NewDefect,
+    Triage,
+    Fixing,
+    NotReproducible,
+    /// <summary> Промежуточная проверка после фикса (расширение к диаграмме). </summary>
+    InReview,
+    Closing,
+    Closed,
+    NotABug,
+    WontFix,
+    Duplicate,
+    Reopening
+}
+
+/// <summary>
+/// События перехода автомата Stateless.
+/// </summary>
+public enum BugTrigger
+{
+    Report,
+    AssignToDeveloper,
+    MarkNotABug,
+    MarkWontFix,
+    MarkDuplicate,
+    DeferNoTime,
+    DeferNeedInfo,
+    DeferSeparateSolution,
+    DeferOtherProduct,
+    CannotReproduce,
+    SubmitFixResolved,
+    SubmitFixNotResolved,
+    ConfirmNotReproOk,
+    ConfirmNotReproReject,
+    ApproveReview,
+    RejectReview,
+    FinalClose,
+    Reopen,
+    CompleteReopen
+}
+
+/// <summary>
+/// Автомат работы с багом.
+/// </summary>
+public class Bug
+{
+    private readonly StateMachine<BugState, BugTrigger> _machine;
+
+    public BugState State => _machine.State;
+
+    public Bug()
     {
-        NewDefect,           // НОВЫЙ ДЕФЕКТ
-        Analysis,            // РАЗБОР ДЕФЕКТОВ
-        NeedMoreInfo,        // НУЖНО БОЛЬШЕ ИНФОРМАЦИИ
-        Fixed,               // ИСПРАВЛЕНИЕ
-        NotDefect,           // НЕ ДЕФЕКТ
-        WonTFix,             // НЕ ИСПРАВЛЯТЬ
-        Duplicate,           // ДУБЛИРОВАНИЕ
-        NotReproducible,     // НЕ ВОСПРОИЗВОДИМО
-        SeparateSolution,    // НУЖНО ОТДЕЛЬНОЕ РЕШЕНИЕ
-        NoTimeNow,           // НЕТ ВРЕМЕНИ СЕЙЧАС
-        OtherProduct         // ПРОБЛЕМА ДРУГОГО ПРОДУКТА
+        _machine = new StateMachine<BugState, BugTrigger>(BugState.NewDefect);
+        ConfigureMachine();
     }
 
-    public enum BugTrigger
+    private void ConfigureMachine()
     {
-        StartAnalysis,
-        ProvideInfo,
-        MarkAsFixed,
-        MarkAsNotDefect,
-        MarkAsWonTFix,
-        MarkAsDuplicate,
-        MarkAsNotReproducible,
-        NeedMoreInfo,
-        MarkAsSeparateSolution,
-        MarkAsNoTimeNow,
-        MarkAsOtherProduct
+        _machine.Configure(BugState.NewDefect)
+            .Permit(BugTrigger.Report, BugState.Triage);
+
+        _machine.Configure(BugState.Triage)
+            .Permit(BugTrigger.AssignToDeveloper, BugState.Fixing)
+            .Permit(BugTrigger.MarkNotABug, BugState.NotABug)
+            .Permit(BugTrigger.MarkWontFix, BugState.WontFix)
+            .Permit(BugTrigger.MarkDuplicate, BugState.Duplicate);
+
+        _machine.Configure(BugState.Fixing)
+            .Permit(BugTrigger.CannotReproduce, BugState.NotReproducible)
+            .Permit(BugTrigger.SubmitFixResolved, BugState.InReview)
+            .Permit(BugTrigger.SubmitFixNotResolved, BugState.Triage)
+            .Permit(BugTrigger.DeferNoTime, BugState.Triage)
+            .Permit(BugTrigger.DeferNeedInfo, BugState.Triage)
+            .Permit(BugTrigger.DeferSeparateSolution, BugState.Triage)
+            .Permit(BugTrigger.DeferOtherProduct, BugState.Triage);
+
+        _machine.Configure(BugState.InReview)
+            .Permit(BugTrigger.ApproveReview, BugState.Closing)
+            .Permit(BugTrigger.RejectReview, BugState.Triage);
+
+        _machine.Configure(BugState.NotReproducible)
+            .Permit(BugTrigger.ConfirmNotReproOk, BugState.Closing)
+            .Permit(BugTrigger.ConfirmNotReproReject, BugState.Triage);
+
+        _machine.Configure(BugState.Closing)
+            .Permit(BugTrigger.FinalClose, BugState.Closed);
+
+        _machine.Configure(BugState.Closed)
+            .Permit(BugTrigger.Reopen, BugState.Reopening);
+
+        _machine.Configure(BugState.Reopening)
+            .Permit(BugTrigger.CompleteReopen, BugState.Triage);
+
+        _machine.Configure(BugState.NotABug);
+        _machine.Configure(BugState.WontFix);
+        _machine.Configure(BugState.Duplicate);
     }
 
-    public class Bug
+    public void Fire(BugTrigger trigger) => _machine.Fire(trigger);
+
+    public bool CanFire(BugTrigger trigger) => _machine.CanFire(trigger);
+}
+
+static class Program
+{
+    static void Main()
     {
-        private StateMachine<BugState, BugTrigger> _machine;
-        public BugState CurrentState => _machine.State;
+        var bug = new Bug();
+        Console.WriteLine($"Начальное состояние: {bug.State}");
 
-        public Bug()
-        {
-            _machine = new StateMachine<BugState, BugTrigger>(BugState.NewDefect);
+        bug.Fire(BugTrigger.Report);
+        Console.WriteLine($"После регистрации: {bug.State}");
 
-            _machine.Configure(BugState.NewDefect)
-                .Permit(BugTrigger.StartAnalysis, BugState.Analysis);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        Console.WriteLine($"Назначен разработчику: {bug.State}");
 
-            _machine.Configure(BugState.Analysis)
-                .Permit(BugTrigger.NeedMoreInfo, BugState.NeedMoreInfo)
-                .Permit(BugTrigger.MarkAsFixed, BugState.Fixed)
-                .Permit(BugTrigger.MarkAsNotDefect, BugState.NotDefect)
-                .Permit(BugTrigger.MarkAsWonTFix, BugState.WonTFix)
-                .Permit(BugTrigger.MarkAsDuplicate, BugState.Duplicate)
-                .Permit(BugTrigger.MarkAsNotReproducible, BugState.NotReproducible)
-                .Permit(BugTrigger.MarkAsSeparateSolution, BugState.SeparateSolution)
-                .Permit(BugTrigger.MarkAsNoTimeNow, BugState.NoTimeNow)
-                .Permit(BugTrigger.MarkAsOtherProduct, BugState.OtherProduct);
+        bug.Fire(BugTrigger.SubmitFixResolved);
+        Console.WriteLine($"Фикс на ревью: {bug.State}");
 
-            _machine.Configure(BugState.NeedMoreInfo)
-                .Permit(BugTrigger.ProvideInfo, BugState.Analysis);
+        bug.Fire(BugTrigger.ApproveReview);
+        Console.WriteLine($"Одобрено, на закрытие: {bug.State}");
 
-            // Терминальные состояния (никаких исходящих переходов)
-            _machine.Configure(BugState.Fixed);
-            _machine.Configure(BugState.NotDefect);
-            _machine.Configure(BugState.WonTFix);
-            _machine.Configure(BugState.Duplicate);
-            _machine.Configure(BugState.NotReproducible);
-            _machine.Configure(BugState.SeparateSolution);
-            _machine.Configure(BugState.NoTimeNow);
-            _machine.Configure(BugState.OtherProduct);
-        }
-
-        public void StartAnalysis() => _machine.Fire(BugTrigger.StartAnalysis);
-        public void ProvideInfo() => _machine.Fire(BugTrigger.ProvideInfo);
-        public void MarkAsFixed() => _machine.Fire(BugTrigger.MarkAsFixed);
-        public void MarkAsNotDefect() => _machine.Fire(BugTrigger.MarkAsNotDefect);
-        public void MarkAsWonTFix() => _machine.Fire(BugTrigger.MarkAsWonTFix);
-        public void MarkAsDuplicate() => _machine.Fire(BugTrigger.MarkAsDuplicate);
-        public void MarkAsNotReproducible() => _machine.Fire(BugTrigger.MarkAsNotReproducible);
-        public void NeedMoreInfo() => _machine.Fire(BugTrigger.NeedMoreInfo);
-        public void MarkAsSeparateSolution() => _machine.Fire(BugTrigger.MarkAsSeparateSolution);
-        public void MarkAsNoTimeNow() => _machine.Fire(BugTrigger.MarkAsNoTimeNow);
-        public void MarkAsOtherProduct() => _machine.Fire(BugTrigger.MarkAsOtherProduct);
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            var bug = new Bug();
-            Console.WriteLine($"Начальное состояние: {bug.CurrentState}");
-
-            bug.StartAnalysis();
-            Console.WriteLine($"После StartAnalysis: {bug.CurrentState}");
-
-            bug.MarkAsFixed();
-            Console.WriteLine($"После MarkAsFixed: {bug.CurrentState}");
-
-            try
-            {
-                bug.MarkAsDuplicate(); // недопустимый переход
-            }
-            catch (InvalidOperationException ex)
-            {
-                Console.WriteLine($"Исключение (ожидаемо): {ex.Message}");
-            }
-
-            Console.WriteLine("Работа автомата завершена.");
-        }
+        bug.Fire(BugTrigger.FinalClose);
+        Console.WriteLine($"Закрыт: {bug.State}");
     }
 }

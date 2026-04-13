@@ -1,222 +1,238 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BugPro;
+namespace BugTests;
 
-namespace BugTests
+[TestClass]
+public class BugStateMachineTests
 {
-    [TestClass]
-    public class BugTests
+    [TestMethod]
+    public void InitialState_IsNewDefect()
     {
-        [TestMethod]
-        public void InitialState_ShouldBeNewDefect()
-        {
-            var bug = new Bug();
-            Assert.AreEqual(BugState.NewDefect, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void StartAnalysis_FromNewDefect_GoesToAnalysis()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            Assert.AreEqual(BugState.Analysis, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromAnalysis_MarkAsFixed_GoesToFixed()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsFixed();
-            Assert.AreEqual(BugState.Fixed, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromAnalysis_MarkAsNotDefect_GoesToNotDefect()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsNotDefect();
-            Assert.AreEqual(BugState.NotDefect, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromAnalysis_MarkAsWonTFix_GoesToWonTFix()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsWonTFix();
-            Assert.AreEqual(BugState.WonTFix, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromAnalysis_MarkAsDuplicate_GoesToDuplicate()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsDuplicate();
-            Assert.AreEqual(BugState.Duplicate, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromAnalysis_MarkAsNotReproducible_GoesToNotReproducible()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsNotReproducible();
-            Assert.AreEqual(BugState.NotReproducible, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromAnalysis_NeedMoreInfo_GoesToNeedMoreInfo()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.NeedMoreInfo();
-            Assert.AreEqual(BugState.NeedMoreInfo, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromAnalysis_MarkAsSeparateSolution_GoesToSeparateSolution()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsSeparateSolution();
-            Assert.AreEqual(BugState.SeparateSolution, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromAnalysis_MarkAsNoTimeNow_GoesToNoTimeNow()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsNoTimeNow();
-            Assert.AreEqual(BugState.NoTimeNow, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromAnalysis_MarkAsOtherProduct_GoesToOtherProduct()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsOtherProduct();
-            Assert.AreEqual(BugState.OtherProduct, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FromNeedMoreInfo_ProvideInfo_ReturnsToAnalysis()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.NeedMoreInfo();
-            bug.ProvideInfo();
-            Assert.AreEqual(BugState.Analysis, bug.CurrentState);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void FromNewDefect_MarkAsFixed_Throws()
-        {
-            var bug = new Bug();
-            bug.MarkAsFixed();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void FromNewDefect_MarkAsDuplicate_Throws()
-        {
-            var bug = new Bug();
-            bug.MarkAsDuplicate();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void FromFixed_StartAnalysis_Throws()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsFixed();
-            bug.StartAnalysis();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void FromFixed_MarkAsFixed_Throws()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsFixed();
-            bug.MarkAsFixed();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void FromAnalysis_ProvideInfo_Throws()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.ProvideInfo();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void FromNeedMoreInfo_MarkAsFixed_Throws()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.NeedMoreInfo();
-            bug.MarkAsFixed();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void FromNotDefect_StartAnalysis_Throws()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsNotDefect();
-            bug.StartAnalysis();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void FromSeparateSolution_StartAnalysis_Throws()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsSeparateSolution();
-            bug.StartAnalysis();
-        }
-
-        [TestMethod]
-        public void AfterInvalidTransition_StateRemainsUnchanged()
-        {
-            var bug = new Bug();
-            try
-            {
-                bug.MarkAsFixed();
-            }
-            catch (InvalidOperationException) { }
-            Assert.AreEqual(BugState.NewDefect, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FullValidFlow_NewDefect_Analysis_Fixed()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.MarkAsFixed();
-            Assert.AreEqual(BugState.Fixed, bug.CurrentState);
-        }
-
-        [TestMethod]
-        public void FullValidFlow_NewDefect_Analysis_NeedMoreInfo_ProvideInfo_Fixed()
-        {
-            var bug = new Bug();
-            bug.StartAnalysis();
-            bug.NeedMoreInfo();
-            bug.ProvideInfo();
-            bug.MarkAsFixed();
-            Assert.AreEqual(BugState.Fixed, bug.CurrentState);
-        }
+        var bug = new Bug();
+        Assert.AreEqual(BugState.NewDefect, bug.State);
     }
+
+    [TestMethod]
+    public void Report_FromNewDefect_GoesToTriage()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        Assert.AreEqual(BugState.Triage, bug.State);
+    }
+
+    [TestMethod]
+    public void Triage_AssignToDeveloper_GoesToFixing()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        Assert.AreEqual(BugState.Fixing, bug.State);
+    }
+
+    [TestMethod]
+    public void Triage_MarkNotABug_GoesToNotABug()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.MarkNotABug);
+        Assert.AreEqual(BugState.NotABug, bug.State);
+    }
+
+    [TestMethod]
+    public void Triage_MarkWontFix_GoesToWontFix()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.MarkWontFix);
+        Assert.AreEqual(BugState.WontFix, bug.State);
+    }
+
+    [TestMethod]
+    public void Triage_MarkDuplicate_GoesToDuplicate()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.MarkDuplicate);
+        Assert.AreEqual(BugState.Duplicate, bug.State);
+    }
+
+    [TestMethod]
+    public void Fixing_CannotReproduce_GoesToNotReproducible()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.CannotReproduce);
+        Assert.AreEqual(BugState.NotReproducible, bug.State);
+    }
+
+    [TestMethod]
+    public void Fixing_SubmitFixResolved_GoesToInReview()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.SubmitFixResolved);
+        Assert.AreEqual(BugState.InReview, bug.State);
+    }
+
+    [TestMethod]
+    public void InReview_ApproveReview_GoesToClosing()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.SubmitFixResolved);
+        bug.Fire(BugTrigger.ApproveReview);
+        Assert.AreEqual(BugState.Closing, bug.State);
+    }
+
+    [TestMethod]
+    public void InReview_RejectReview_ReturnsToTriage()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.SubmitFixResolved);
+        bug.Fire(BugTrigger.RejectReview);
+        Assert.AreEqual(BugState.Triage, bug.State);
+    }
+
+    [TestMethod]
+    public void Closing_FinalClose_GoesToClosed()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.SubmitFixResolved);
+        bug.Fire(BugTrigger.ApproveReview);
+        bug.Fire(BugTrigger.FinalClose);
+        Assert.AreEqual(BugState.Closed, bug.State);
+    }
+
+    [TestMethod]
+    public void Closed_Reopen_GoesToReopening()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.SubmitFixResolved);
+        bug.Fire(BugTrigger.ApproveReview);
+        bug.Fire(BugTrigger.FinalClose);
+        bug.Fire(BugTrigger.Reopen);
+        Assert.AreEqual(BugState.Reopening, bug.State);
+    }
+
+    [TestMethod]
+    public void Reopening_CompleteReopen_GoesToTriage()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.SubmitFixResolved);
+        bug.Fire(BugTrigger.ApproveReview);
+        bug.Fire(BugTrigger.FinalClose);
+        bug.Fire(BugTrigger.Reopen);
+        bug.Fire(BugTrigger.CompleteReopen);
+        Assert.AreEqual(BugState.Triage, bug.State);
+    }
+
+    [TestMethod]
+    public void NotReproducible_ConfirmOk_GoesToClosing()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.CannotReproduce);
+        bug.Fire(BugTrigger.ConfirmNotReproOk);
+        Assert.AreEqual(BugState.Closing, bug.State);
+    }
+
+    [TestMethod]
+    public void NotReproducible_ConfirmReject_ReturnsToTriage()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.CannotReproduce);
+        bug.Fire(BugTrigger.ConfirmNotReproReject);
+        Assert.AreEqual(BugState.Triage, bug.State);
+    }
+
+    [TestMethod]
+    public void Fixing_SubmitFixNotResolved_ReturnsToTriage()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.SubmitFixNotResolved);
+        Assert.AreEqual(BugState.Triage, bug.State);
+    }
+
+    [TestMethod]
+    public void Fixing_DeferNeedInfo_ReturnsToTriage()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.DeferNeedInfo);
+        Assert.AreEqual(BugState.Triage, bug.State);
+    }
+
+    [TestMethod]
+    public void FullPath_NewThroughReviewToClosed()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.SubmitFixResolved);
+        bug.Fire(BugTrigger.ApproveReview);
+        bug.Fire(BugTrigger.FinalClose);
+        Assert.AreEqual(BugState.Closed, bug.State);
+    }
+
+    [TestMethod]
+    public void Fire_FromNewDefect_AssignToDeveloper_ThrowsInvalidOperationException()
+    {
+        var bug = new Bug();
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.AssignToDeveloper));
+    }
+
+    [TestMethod]
+    public void Fire_FromClosed_Report_ThrowsInvalidOperationException()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        bug.Fire(BugTrigger.SubmitFixResolved);
+        bug.Fire(BugTrigger.ApproveReview);
+        bug.Fire(BugTrigger.FinalClose);
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.Report));
+    }
+
+    [TestMethod]
+    public void Fire_FromTerminalNotABug_FireReport_ThrowsInvalidOperationException()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.MarkNotABug);
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.Report));
+    }
+
+    [TestMethod]
+    public void Fire_FromFixing_ApproveReview_ThrowsInvalidOperationException()
+    {
+        var bug = new Bug();
+        bug.Fire(BugTrigger.Report);
+        bug.Fire(BugTrigger.AssignToDeveloper);
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.ApproveReview));
+    }
+
+    [TestMethod]
+    public void CanFire_IsFalse_WhenTransitionNotAllowed()
+    {
+        var bug = new Bug();
+        Assert.IsFalse(bug.CanFire(BugTrigger.FinalClose));
+        bug.Fire(BugTrigger.Report);
+        Assert.IsFalse(bug.CanFire(BugTrigger.FinalClose));
+    }
+
 }

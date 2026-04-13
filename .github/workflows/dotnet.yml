@@ -1,13 +1,12 @@
-name: .NET CI
+name: .NET
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
+on: [push, pull_request]
+
 
 jobs:
-  build-and-test:
+ build:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -15,10 +14,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: '9.x'
     - name: Restore dependencies
-      run: dotnet restore ST-4.sln
+      run: dotnet restore
     - name: Build
-      run: dotnet build ST-4.sln --no-restore --configuration Release
-    - name: Run tests
-      run: dotnet test ST-4.sln --no-build --configuration Release --verbosity normal
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
