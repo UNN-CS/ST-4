@@ -95,7 +95,6 @@ namespace BugPro
         static void Main(string[] args)
         {
             Console.WriteLine("---Тест прохода по схеме---\n");
-            
             var bug = new Bug(); // Новый дефект
             bug.Analyze(); // Разбор дефектов
             bug.StartFix(); // Исправление
