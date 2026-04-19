@@ -1,20 +1,17 @@
-## Build results
-[Bb]in/
-[Oo]bj/
-[Dd]ebug/
-[Rr]elease/
+bin/
+obj/
+.vs/
 
-## NuGet
-*.nupkg
-**/packages/
-
-## User-specific files
+TestResults/
 *.user
 *.suo
 *.userosscache
-*.sln.docstates
+*.rsuser
 
-## VS / Rider
-.vs/
 .idea/
-*.DotSettings.user
+.vscode/
+.dotnet/
+.nuget/
+
+*.nupkg
+*.snupkg

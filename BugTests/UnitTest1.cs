@@ -4,292 +4,406 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BugTests;
 
 [TestClass]
-public sealed class UnitTest1
+public class BugWorkflowTests
 {
     [TestMethod]
-    public void NewBug_InitialState_IsOpen()
+    public void NewBugStartsInNewState()
     {
-        var bug = new Bug("test");
-        Assert.AreEqual(Bug.State.Open, bug.CurrentState);
+        var bug = new Bug();
+
+        Assert.AreEqual(Bug.State.New, bug.CurrentState);
     }
 
     [TestMethod]
-    public void Assign_FromOpen_MovesToAssigned()
+    public void TriageMovesBugToTriaged()
     {
-        var bug = new Bug("test");
-        bug.Assign();
-        Assert.AreEqual(Bug.State.Assigned, bug.CurrentState);
+        var bug = new Bug();
+
+        bug.Triage();
+
+        Assert.AreEqual(Bug.State.Triaged, bug.CurrentState);
     }
-    
+
     [TestMethod]
-    public void Defer_FromAssigned_MovesToDeferred()
+    public void StartProgressMovesTriagedBugToInProgress()
     {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.Defer();
-        Assert.AreEqual(Bug.State.Deferred, bug.CurrentState);
-    }
-    
-    [TestMethod]
-    public void Assign_FromDeferred_MovesToAssigned()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.Defer();
-        bug.Assign();
-        Assert.AreEqual(Bug.State.Assigned, bug.CurrentState);
-    }
-    
-    [TestMethod]
-    public void StartFix_FromAssigned_MovesToInProgress()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.StartFix();
+        var bug = CreateTriagedBug();
+
+        bug.StartProgress();
+
         Assert.AreEqual(Bug.State.InProgress, bug.CurrentState);
     }
 
     [TestMethod]
-    public void Resolve_FromInProgress_MovesToResolved()
+    public void RequestInfoFromTriagedMovesBugToWaitingForInfo()
     {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.StartFix();
+        var bug = CreateTriagedBug();
+
+        bug.RequestInfo();
+
+        Assert.AreEqual(Bug.State.WaitingForInfo, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void ProvideInfoReturnsBugToTriaged()
+    {
+        var bug = CreateTriagedBug();
+        bug.RequestInfo();
+
+        bug.ProvideInfo();
+
+        Assert.AreEqual(Bug.State.Triaged, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void DeferFromTriagedMovesBugToDeferred()
+    {
+        var bug = CreateTriagedBug();
+
+        bug.Defer();
+
+        Assert.AreEqual(Bug.State.Deferred, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void ResumeReturnsDeferredBugToTriaged()
+    {
+        var bug = CreateTriagedBug();
+        bug.Defer();
+
+        bug.Resume();
+
+        Assert.AreEqual(Bug.State.Triaged, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void MarkNotABugMovesBugToRejected()
+    {
+        var bug = CreateTriagedBug();
+
+        bug.MarkNotABug();
+
+        Assert.AreEqual(Bug.State.Rejected, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void MarkDuplicateMovesBugToDuplicate()
+    {
+        var bug = CreateTriagedBug();
+
+        bug.MarkDuplicate();
+
+        Assert.AreEqual(Bug.State.Duplicate, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void MarkCannotReproduceMovesBugToCannotReproduce()
+    {
+        var bug = CreateTriagedBug();
+
+        bug.MarkCannotReproduce();
+
+        Assert.AreEqual(Bug.State.CannotReproduce, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void ResolveMovesBugToResolved()
+    {
+        var bug = CreateInProgressBug();
+
         bug.Resolve();
+
         Assert.AreEqual(Bug.State.Resolved, bug.CurrentState);
     }
 
     [TestMethod]
-    public void Close_FromResolved_MovesToClosed()
+    public void VerifyFixWithTrueClosesResolvedBug()
     {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.StartFix();
-        bug.Resolve();
-        bug.Close();
+        var bug = CreateResolvedBug();
+
+        bug.VerifyFix(true);
+
         Assert.AreEqual(Bug.State.Closed, bug.CurrentState);
     }
 
     [TestMethod]
-    public void StartFix_FromResolved_MovesBackToInProgress()
+    public void VerifyFixWithFalseReopensResolvedBug()
     {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.StartFix();
-        bug.Resolve();
-        bug.StartFix();
-        Assert.AreEqual(Bug.State.InProgress, bug.CurrentState);
-    }
+        var bug = CreateResolvedBug();
 
-    [TestMethod]
-    public void Reopen_FromClosed_MovesToReopened()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.StartFix();
-        bug.Resolve();
-        bug.Close();
-        bug.Reopen();
+        bug.VerifyFix(false);
+
         Assert.AreEqual(Bug.State.Reopened, bug.CurrentState);
     }
 
     [TestMethod]
-    public void ReturnToTriage_FromReopened_MovesToAssigned()
+    public void ReopenMovesClosedBugToReopened()
     {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.StartFix();
-        bug.Resolve();
-        bug.Close();
+        var bug = CreateClosedBug();
+
         bug.Reopen();
-        bug.ReturnToTriage();
-        Assert.AreEqual(Bug.State.Assigned, bug.CurrentState);
+
+        Assert.AreEqual(Bug.State.Reopened, bug.CurrentState);
     }
 
     [TestMethod]
-    public void MarkNotABug_FromAssigned_MovesToClosed()
+    public void ReturnToTriagedMovesReopenedBugToTriaged()
     {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.MarkNotABug();
-        Assert.AreEqual(Bug.State.Closed, bug.CurrentState);
+        var bug = CreateClosedBug();
+        bug.Reopen();
+
+        bug.ReturnToTriaged();
+
+        Assert.AreEqual(Bug.State.Triaged, bug.CurrentState);
     }
 
     [TestMethod]
-    public void MarkDuplicate_FromAssigned_MovesToClosed()
+    public void ReopenMovesDuplicateBugToReopened()
     {
-        var bug = new Bug("test");
-        bug.Assign();
+        var bug = CreateTriagedBug();
         bug.MarkDuplicate();
-        Assert.AreEqual(Bug.State.Closed, bug.CurrentState);
-    }
 
-    [TestMethod]
-    public void MarkCannotReproduce_FromAssigned_MovesToClosed()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.MarkCannotReproduce();
-        Assert.AreEqual(Bug.State.Closed, bug.CurrentState);
-    }
-
-    [TestMethod]
-    public void MarkDoNotFix_FromAssigned_MovesToClosed()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.MarkDoNotFix();
-        Assert.AreEqual(Bug.State.Closed, bug.CurrentState);
-    }
-
-    [TestMethod]
-    public void FullLifecycle_WorksCorrectly()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.StartFix();
-        bug.Resolve();
-        bug.Close();
         bug.Reopen();
-        bug.ReturnToTriage();
-        Assert.AreEqual(Bug.State.Assigned, bug.CurrentState);
+
+        Assert.AreEqual(Bug.State.Reopened, bug.CurrentState);
     }
 
     [TestMethod]
-    public void Constructor_WithInitialState_SetsCorrectState()
+    public void ReopenMovesRejectedBugToReopened()
     {
-        var bug = new Bug("test", Bug.State.Assigned);
-        Assert.AreEqual(Bug.State.Assigned, bug.CurrentState);
+        var bug = CreateTriagedBug();
+        bug.MarkNotABug();
+
+        bug.Reopen();
+
+        Assert.AreEqual(Bug.State.Reopened, bug.CurrentState);
     }
 
     [TestMethod]
-    public void CanFire_ValidTrigger_ReturnsTrue()
+    public void CloseMovesCannotReproduceBugToClosed()
     {
-        var bug = new Bug("test");
-        Assert.IsTrue(bug.CanFire(Bug.Trigger.Assign));
+        var bug = CreateTriagedBug();
+        bug.MarkCannotReproduce();
+
+        bug.Close();
+
+        Assert.AreEqual(Bug.State.Closed, bug.CurrentState);
     }
-    
+
     [TestMethod]
-    public void CanFire_InvalidTrigger_ReturnsFalse()
+    public void RequestInfoFromInProgressMovesBugToWaitingForInfo()
     {
-        var bug = new Bug("test");
+        var bug = CreateInProgressBug();
+
+        bug.RequestInfo();
+
+        Assert.AreEqual(Bug.State.WaitingForInfo, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void DeferFromInProgressMovesBugToDeferred()
+    {
+        var bug = CreateInProgressBug();
+
+        bug.Defer();
+
+        Assert.AreEqual(Bug.State.Deferred, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void StartProgressFromWaitingForInfoMovesBugToInProgress()
+    {
+        var bug = CreateTriagedBug();
+        bug.RequestInfo();
+
+        bug.StartProgress();
+
+        Assert.AreEqual(Bug.State.InProgress, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void ReopenMovesCannotReproduceBugToReopened()
+    {
+        var bug = CreateTriagedBug();
+        bug.MarkCannotReproduce();
+
+        bug.Reopen();
+
+        Assert.AreEqual(Bug.State.Reopened, bug.CurrentState);
+    }
+
+    [TestMethod]
+    public void StartProgressCannotBeFiredFromNewState()
+    {
+        var bug = new Bug();
+
+        Assert.ThrowsException<InvalidOperationException>(() => bug.StartProgress());
+    }
+
+    [TestMethod]
+    public void ProvideInfoCannotBeFiredFromTriagedState()
+    {
+        var bug = CreateTriagedBug();
+
+        Assert.ThrowsException<InvalidOperationException>(() => bug.ProvideInfo());
+    }
+
+    [TestMethod]
+    public void VerifyFixCannotBeFiredFromInProgressState()
+    {
+        var bug = CreateInProgressBug();
+
+        Assert.ThrowsException<InvalidOperationException>(() => bug.VerifyFix(true));
+    }
+
+    [TestMethod]
+    public void CloseCannotBeFiredFromTriagedState()
+    {
+        var bug = CreateTriagedBug();
+
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Close());
+    }
+
+    [TestMethod]
+    public void StatelessExceptionMessageContainsTriggerNameForInvalidTransition()
+    {
+        var bug = new Bug();
+
+        var exception = Assert.ThrowsException<InvalidOperationException>(() => bug.StartProgress());
+
+        StringAssert.Contains(exception.Message, "StartProgress");
+    }
+
+    [TestMethod]
+    public void StatelessExceptionMessageContainsStateNameForInvalidTransition()
+    {
+        var bug = CreateTriagedBug();
+
+        var exception = Assert.ThrowsException<InvalidOperationException>(() => bug.Close());
+
+        StringAssert.Contains(exception.Message, "Triaged");
+    }
+
+    [TestMethod]
+    public void CanFireReportsAvailableTransitions()
+    {
+        var bug = CreateTriagedBug();
+
+        Assert.IsTrue(bug.CanFire(Bug.Trigger.StartProgress));
         Assert.IsFalse(bug.CanFire(Bug.Trigger.Close));
     }
-    
+
     [TestMethod]
-    public void GetPermittedTriggers_OpenState_ReturnsOnlyAssign()
+    public void ClosedStateIsFinal()
     {
-        var bug = new Bug("test");
-        var triggers = bug.GetPermittedTriggers().ToList();
-        Assert.AreEqual(1, triggers.Count);
-        Assert.IsTrue(triggers.Contains(Bug.Trigger.Assign));
-    }
-    
-    [TestMethod]
-    public void GetPermittedTriggers_AssignedState_ReturnsMultipleTriggers()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        var triggers = bug.GetPermittedTriggers().ToList();
-        Assert.IsTrue(triggers.Contains(Bug.Trigger.Defer));
-        Assert.IsTrue(triggers.Contains(Bug.Trigger.StartFix));
-        Assert.IsTrue(triggers.Contains(Bug.Trigger.NotABug));
-        Assert.IsTrue(triggers.Contains(Bug.Trigger.Duplicate));
-        Assert.IsTrue(triggers.Contains(Bug.Trigger.CannotReproduce));
-        Assert.IsTrue(triggers.Contains(Bug.Trigger.DoNotFix));
-    }
-    
-    [TestMethod]
-    public void ToString_ReturnsCorrectFormat()
-    {
-        var bug = new Bug("My Bug");
-        Assert.AreEqual("[My Bug] State: Open", bug.ToString());
-    }
-    
-    [TestMethod]
-    public void Close_FromOpen_ThrowsException()
-    {
-        var bug = new Bug("test");
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Close());
+        var bug = CreateClosedBug();
+
+        Assert.IsTrue(bug.IsFinalState);
     }
 
     [TestMethod]
-    public void Resolve_FromOpen_ThrowsException()
+    public void RejectedStateIsFinal()
     {
-        var bug = new Bug("test");
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Resolve());
-    }
-
-    [TestMethod]
-    public void Defer_FromOpen_ThrowsException()
-    {
-        var bug = new Bug("test");
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Defer());
-    }
-
-    [TestMethod]
-    public void StartFix_FromOpen_ThrowsException()
-    {
-        var bug = new Bug("test");
-        Assert.ThrowsException<InvalidOperationException>(() => bug.StartFix());
-    }
-
-    [TestMethod]
-    public void Reopen_FromOpen_ThrowsException()
-    {
-        var bug = new Bug("test");
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Reopen());
-    }
-
-    [TestMethod]
-    public void Assign_FromInProgress_ThrowsException()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.StartFix();
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Assign());
-    }
-
-    [TestMethod]
-    public void Close_FromInProgress_ThrowsException()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.StartFix();
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Close());
-    }
-
-    [TestMethod]
-    public void Reopen_FromAssigned_ThrowsException()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Reopen());
-    }
-
-    [TestMethod]
-    public void ReturnToTriage_FromClosed_ThrowsException()
-    {
-        var bug = new Bug("test");
-        bug.Assign();
+        var bug = CreateTriagedBug();
         bug.MarkNotABug();
-        Assert.ThrowsException<InvalidOperationException>(() => bug.ReturnToTriage());
+
+        Assert.IsTrue(bug.IsFinalState);
     }
 
     [TestMethod]
-    public void Assign_FromAssigned_ThrowsException()
+    public void DuplicateStateIsFinal()
     {
-        var bug = new Bug("test");
-        bug.Assign();
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Assign());
+        var bug = CreateTriagedBug();
+        bug.MarkDuplicate();
+
+        Assert.IsTrue(bug.IsFinalState);
     }
 
     [TestMethod]
-    public void Defer_FromDeferred_ThrowsException()
+    public void CannotReproduceStateIsNotFinal()
     {
-        var bug = new Bug("test");
-        bug.Assign();
-        bug.Defer();
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Defer());
+        var bug = CreateTriagedBug();
+        bug.MarkCannotReproduce();
+
+        Assert.IsFalse(bug.IsFinalState);
+    }
+
+    [TestMethod]
+    public void InProgressStateIsNotFinal()
+    {
+        var bug = CreateInProgressBug();
+
+        Assert.IsFalse(bug.IsFinalState);
+    }
+
+    [TestMethod]
+    public void HistoryStoresEachTransition()
+    {
+        var bug = new Bug();
+        bug.Triage();
+        bug.StartProgress();
+        bug.Resolve();
+
+        Assert.AreEqual(3, bug.History.Count);
+        StringAssert.Contains(bug.History[0], "New --Triage--> Triaged");
+    }
+
+    [TestMethod]
+    public void HistoryTracksVerificationTransition()
+    {
+        var bug = CreateResolvedBug();
+
+        bug.VerifyFix(true);
+
+        Assert.AreEqual(4, bug.History.Count);
+        StringAssert.Contains(bug.History[^1], "Resolved --VerifyFix--> Closed");
+    }
+
+    [TestMethod]
+    public void ToStringContainsCurrentState()
+    {
+        var bug = CreateResolvedBug();
+
+        var description = bug.ToString();
+
+        StringAssert.Contains(description, "Resolved");
+    }
+
+    [TestMethod]
+    public void ToStringContainsHistorySizeLabel()
+    {
+        var bug = new Bug();
+
+        var description = bug.ToString();
+
+        StringAssert.Contains(description, "history size");
+    }
+
+    private static Bug CreateTriagedBug()
+    {
+        var bug = new Bug();
+        bug.Triage();
+        return bug;
+    }
+
+    private static Bug CreateInProgressBug()
+    {
+        var bug = CreateTriagedBug();
+        bug.StartProgress();
+        return bug;
+    }
+
+    private static Bug CreateResolvedBug()
+    {
+        var bug = CreateInProgressBug();
+        bug.Resolve();
+        return bug;
+    }
+
+    private static Bug CreateClosedBug()
+    {
+        var bug = CreateResolvedBug();
+        bug.VerifyFix(true);
+        return bug;
     }
 }
