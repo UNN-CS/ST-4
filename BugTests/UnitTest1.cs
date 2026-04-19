@@ -227,7 +227,7 @@ public sealed class UnitTest1
     {
         var bug = CreateBug();
 
-        Assert.ThrowsException<InvalidOperationException>(() => bug.MarkFixed());
+        Assert.Throws<InvalidOperationException>(() => bug.MarkFixed());
     }
 
     [TestMethod]
@@ -236,7 +236,7 @@ public sealed class UnitTest1
         var bug = CreateBugAtTriage();
         bug.RequestMoreInfo("Нужны логи.");
 
-        Assert.ThrowsException<InvalidOperationException>(() => bug.AcceptFix());
+        Assert.Throws<InvalidOperationException>(() => bug.AcceptFix());
     }
 
     [TestMethod]
@@ -244,7 +244,7 @@ public sealed class UnitTest1
     {
         var bug = CreateClosedBug();
 
-        Assert.ThrowsException<InvalidOperationException>(() => bug.AcceptFix());
+        Assert.Throws<InvalidOperationException>(() => bug.AcceptFix());
     }
 
     [TestMethod]
