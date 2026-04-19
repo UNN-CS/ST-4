@@ -1,0 +1,144 @@
+using Stateless;
+
+namespace BugPro;
+
+public class Bug
+{
+    public enum State
+    {
+        Open,
+        Assigned,
+        Deferred,
+        InProgress,
+        Resolved,
+        Closed,
+        Reopened
+    }
+
+    public enum Trigger
+    {
+        Assign,
+        Defer,
+        StartFix,
+        Resolve,
+        Close,
+        NotABug,
+        Duplicate,
+        CannotReproduce,
+        DoNotFix,
+        Reopen,
+        ReturnToTriage
+    }
+
+    private readonly StateMachine<State, Trigger> _machine;
+    private readonly string _title;
+
+    public State CurrentState => _machine.State;
+
+    public Bug(string title)
+    {
+        _title = title;
+        _machine = new StateMachine<State, Trigger>(State.Open);
+        ConfigureStateMachine();
+    }
+
+    public Bug(string title, State initialState)
+    {
+        _title = title;
+        _machine = new StateMachine<State, Trigger>(initialState);
+        ConfigureStateMachine();
+    }
+
+    private void ConfigureStateMachine()
+    {
+        _machine.Configure(State.Open)
+            .Permit(Trigger.Assign, State.Assigned);
+
+        _machine.Configure(State.Assigned)
+            .Permit(Trigger.Defer, State.Deferred)
+            .Permit(Trigger.StartFix, State.InProgress)
+            .Permit(Trigger.NotABug, State.Closed)
+            .Permit(Trigger.Duplicate, State.Closed)
+            .Permit(Trigger.CannotReproduce, State.Closed)
+            .Permit(Trigger.DoNotFix, State.Closed);
+
+        _machine.Configure(State.Deferred)
+            .Permit(Trigger.Assign, State.Assigned);
+
+        _machine.Configure(State.InProgress)
+            .Permit(Trigger.Resolve, State.Resolved);
+
+        _machine.Configure(State.Resolved)
+            .Permit(Trigger.Close, State.Closed)
+            .Permit(Trigger.StartFix, State.InProgress);
+
+        _machine.Configure(State.Closed)
+            .Permit(Trigger.Reopen, State.Reopened);
+
+        _machine.Configure(State.Reopened)
+            .Permit(Trigger.ReturnToTriage, State.Assigned);
+    }
+
+    public void Assign() => _machine.Fire(Trigger.Assign);
+    public void Defer() => _machine.Fire(Trigger.Defer);
+    public void StartFix() => _machine.Fire(Trigger.StartFix);
+    public void Resolve() => _machine.Fire(Trigger.Resolve);
+    public void Close() => _machine.Fire(Trigger.Close);
+    public void MarkNotABug() => _machine.Fire(Trigger.NotABug);
+    public void MarkDuplicate() => _machine.Fire(Trigger.Duplicate);
+    public void MarkCannotReproduce() => _machine.Fire(Trigger.CannotReproduce);
+    public void MarkDoNotFix() => _machine.Fire(Trigger.DoNotFix);
+    public void Reopen() => _machine.Fire(Trigger.Reopen);
+    public void ReturnToTriage() => _machine.Fire(Trigger.ReturnToTriage);
+
+    public bool CanFire(Trigger trigger) => _machine.CanFire(trigger);
+
+    public IEnumerable<Trigger> GetPermittedTriggers() => _machine.PermittedTriggers;
+
+    public override string ToString() => $"[{_title}] State: {CurrentState}";
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var bug = new Bug("Login button does not work");
+        Console.WriteLine(bug);
+
+        bug.Assign();
+        Console.WriteLine($"After Assign: {bug}");
+
+        bug.StartFix();
+        Console.WriteLine($"After StartFix: {bug}");
+
+        bug.Resolve();
+        Console.WriteLine($"After Resolve: {bug}");
+
+        bug.Close();
+        Console.WriteLine($"After Close: {bug}");
+
+        Console.WriteLine("\n Reopen scenario ");
+        bug.Reopen();
+        Console.WriteLine($"After Reopen: {bug}");
+
+        bug.ReturnToTriage();
+        Console.WriteLine($"After ReturnToTriage: {bug}");
+
+        Console.WriteLine("\n Defer scenario ");
+        var bug2 = new Bug("Minor UI glitch");
+        Console.WriteLine(bug2);
+
+        bug2.Assign();
+        bug2.Defer();
+        Console.WriteLine($"After Defer: {bug2}");
+
+        bug2.Assign();
+        Console.WriteLine($"After re-Assign: {bug2}");
+
+        bug2.MarkDuplicate();
+        Console.WriteLine($"After MarkDuplicate: {bug2}");
+
+        Console.WriteLine("\nPermitted triggers for closed bug: " +
+            string.Join(", ", bug2.GetPermittedTriggers()));
+    }
+}
