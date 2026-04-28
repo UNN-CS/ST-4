@@ -1,23 +1,21 @@
 name: .NET
 
-
 on: [push, pull_request]
 
-
 jobs:
- build:
-
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '9.x'
+        dotnet-version: '9.0.x'
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ST-4.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ST-4.sln --no-restore --configuration Release
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ST-4.sln --no-build --verbosity normal --configuration Release
+      
