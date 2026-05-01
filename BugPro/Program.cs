@@ -98,20 +98,25 @@ public class Bug {
     _machine.Configure(BugState.Duplicate)
         .Permit(BugTrigger.Return, BugState.Returned);
     _machine.Configure(BugState.NotReproducible)
-        .Permit(BugTrigger.Return, BugState.Returned);
+        .Permit(BugTrigger.Approve, BugState.Closed)
+        .Permit(BugTrigger.Reject, BugState.Returned);
 
     _machine.Configure(BugState.Returned)
         .Permit(BugTrigger.StartTriage, BugState.Triage);
 
     _machine.Configure(BugState.Fixing)
-        .Permit(BugTrigger.MarkFixed, BugState.Verification);
+        .Permit(BugTrigger.MarkFixed, BugState.Verification)
+        .Permit(BugTrigger.NeedInfo, BugState.NeedInfo)
+        .Permit(BugTrigger.OtherProduct, BugState.OtherProduct)
+        .Permit(BugTrigger.NeedDecisionLater, BugState.NeedDecisionLater)
+        .Permit(BugTrigger.MarkNotRepro, BugState.NotReproducible);
 
     _machine.Configure(BugState.Verification)
         .Permit(BugTrigger.Approve, BugState.Closed)
         .Permit(BugTrigger.Reject, BugState.Returned);
 
     _machine.Configure(BugState.Closed)
-        .Permit(BugTrigger.Reopen, BugState.Reopened);
+        .Permit(BugTrigger.Reopen, BugState.Triage);
 
     _machine.Configure(BugState.Reopened)
         .Permit(BugTrigger.StartTriage, BugState.Triage);
