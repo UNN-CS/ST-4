@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "j+6UTikPukw=",
+  "success": true,
+  "projectFilePath": "D:\\Microsoft Visual Studio\\Visual Studio Code\\ST\\ST-4\\BugPro\\BugPro.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Даниил\\.nuget\\packages\\stateless\\5.20.1\\stateless.5.20.1.nupkg.sha512"
+  ],
+  "logs": []
+}
