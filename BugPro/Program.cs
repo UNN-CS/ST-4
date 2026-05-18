@@ -50,28 +50,28 @@ public enum BugTrigger
 /// </summary>
 public class Bug
 {
-    private readonly StateMachine<BugState, BugTrigger> _machine;
+    private readonly StateMachine<BugState, BugTrigger> _stateEngine;
 
-    public BugState State => _machine.State;
+    public BugState State => _stateEngine.State;
 
     public Bug()
     {
-        _machine = new StateMachine<BugState, BugTrigger>(BugState.NewDefect);
-        ConfigureMachine();
+        _stateEngine = new StateMachine<BugState, BugTrigger>(BugState.NewDefect);
+        BuildStateGraph();
     }
 
-    private void ConfigureMachine()
+    private void BuildStateGraph()
     {
-        _machine.Configure(BugState.NewDefect)
+        _stateEngine.Configure(BugState.NewDefect)
             .Permit(BugTrigger.Report, BugState.Triage);
 
-        _machine.Configure(BugState.Triage)
+        _stateEngine.Configure(BugState.Triage)
             .Permit(BugTrigger.AssignToDeveloper, BugState.Fixing)
             .Permit(BugTrigger.MarkNotABug, BugState.NotABug)
             .Permit(BugTrigger.MarkWontFix, BugState.WontFix)
             .Permit(BugTrigger.MarkDuplicate, BugState.Duplicate);
 
-        _machine.Configure(BugState.Fixing)
+        _stateEngine.Configure(BugState.Fixing)
             .Permit(BugTrigger.CannotReproduce, BugState.NotReproducible)
             .Permit(BugTrigger.SubmitFixResolved, BugState.InReview)
             .Permit(BugTrigger.SubmitFixNotResolved, BugState.Triage)
@@ -80,53 +80,53 @@ public class Bug
             .Permit(BugTrigger.DeferSeparateSolution, BugState.Triage)
             .Permit(BugTrigger.DeferOtherProduct, BugState.Triage);
 
-        _machine.Configure(BugState.InReview)
+        _stateEngine.Configure(BugState.InReview)
             .Permit(BugTrigger.ApproveReview, BugState.Closing)
             .Permit(BugTrigger.RejectReview, BugState.Triage);
 
-        _machine.Configure(BugState.NotReproducible)
+        _stateEngine.Configure(BugState.NotReproducible)
             .Permit(BugTrigger.ConfirmNotReproOk, BugState.Closing)
             .Permit(BugTrigger.ConfirmNotReproReject, BugState.Triage);
 
-        _machine.Configure(BugState.Closing)
+        _stateEngine.Configure(BugState.Closing)
             .Permit(BugTrigger.FinalClose, BugState.Closed);
 
-        _machine.Configure(BugState.Closed)
+        _stateEngine.Configure(BugState.Closed)
             .Permit(BugTrigger.Reopen, BugState.Reopening);
 
-        _machine.Configure(BugState.Reopening)
+        _stateEngine.Configure(BugState.Reopening)
             .Permit(BugTrigger.CompleteReopen, BugState.Triage);
 
-        _machine.Configure(BugState.NotABug);
-        _machine.Configure(BugState.WontFix);
-        _machine.Configure(BugState.Duplicate);
+        _stateEngine.Configure(BugState.NotABug);
+        _stateEngine.Configure(BugState.WontFix);
+        _stateEngine.Configure(BugState.Duplicate);
     }
 
-    public void Fire(BugTrigger trigger) => _machine.Fire(trigger);
+    public void Fire(BugTrigger action) => _stateEngine.Fire(action);
 
-    public bool CanFire(BugTrigger trigger) => _machine.CanFire(trigger);
+    public bool CanFire(BugTrigger action) => _stateEngine.CanFire(action);
 }
 
 static class Program
 {
     static void Main()
     {
-        var bug = new Bug();
-        Console.WriteLine($"Начальное состояние: {bug.State}");
+        var ticket = new Bug();
+        Console.WriteLine($"Начальное состояние: {ticket.State}");
 
-        bug.Fire(BugTrigger.Report);
-        Console.WriteLine($"После регистрации: {bug.State}");
+        ticket.Fire(BugTrigger.Report);
+        Console.WriteLine($"После регистрации: {ticket.State}");
 
-        bug.Fire(BugTrigger.AssignToDeveloper);
-        Console.WriteLine($"Назначен разработчику: {bug.State}");
+        ticket.Fire(BugTrigger.AssignToDeveloper);
+        Console.WriteLine($"Назначен разработчику: {ticket.State}");
 
-        bug.Fire(BugTrigger.SubmitFixResolved);
-        Console.WriteLine($"Фикс на ревью: {bug.State}");
+        ticket.Fire(BugTrigger.SubmitFixResolved);
+        Console.WriteLine($"Фикс на ревью: {ticket.State}");
 
-        bug.Fire(BugTrigger.ApproveReview);
-        Console.WriteLine($"Одобрено, на закрытие: {bug.State}");
+        ticket.Fire(BugTrigger.ApproveReview);
+        Console.WriteLine($"Одобрено, на закрытие: {ticket.State}");
 
-        bug.Fire(BugTrigger.FinalClose);
-        Console.WriteLine($"Закрыт: {bug.State}");
+        ticket.Fire(BugTrigger.FinalClose);
+        Console.WriteLine($"Закрыт: {ticket.State}");
     }
 }

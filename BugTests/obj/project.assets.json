@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net7.0": {
+    "net9.0": {
       "coverlet.collector/3.2.0": {
         "type": "package",
         "build": {
@@ -614,7 +614,7 @@
       },
       "BugPro/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v7.0",
+        "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "Stateless": "5.13.0"
         },
@@ -2352,7 +2352,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net7.0": [
+    "net9.0": [
       "BugPro >= 1.0.0",
       "MSTest.TestAdapter >= 2.2.10",
       "MSTest.TestFramework >= 2.2.10",
@@ -2361,33 +2361,39 @@
     ]
   },
   "packageFolders": {
-    "/var/folders/x7/z0f1vjjs4yj_wwgfmmyz7zjc0000gn/T/cursor-sandbox-cache/f889410acc4d60a95dcbd5c1355aeb33/nuget": {}
+    "C:\\Users\\USER\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/sashosha/ST-4/BugTests/BugTests.csproj",
+      "projectUniqueName": "C:\\Users\\USER\\ST-4\\BugTests\\BugTests.csproj",
       "projectName": "BugTests",
-      "projectPath": "/Users/sashosha/ST-4/BugTests/BugTests.csproj",
-      "packagesPath": "/var/folders/x7/z0f1vjjs4yj_wwgfmmyz7zjc0000gn/T/cursor-sandbox-cache/f889410acc4d60a95dcbd5c1355aeb33/nuget",
-      "outputPath": "/Users/sashosha/ST-4/BugTests/obj/",
+      "projectPath": "C:\\Users\\USER\\ST-4\\BugTests\\BugTests.csproj",
+      "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\USER\\ST-4\\BugTests\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/sashosha/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net7.0"
+        "net9.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net9.0": {
+          "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/sashosha/ST-4/BugPro/BugPro.csproj": {
-              "projectPath": "/Users/sashosha/ST-4/BugPro/BugPro.csproj"
+            "C:\\Users\\USER\\ST-4\\BugPro\\BugPro.csproj": {
+              "projectPath": "C:\\Users\\USER\\ST-4\\BugPro\\BugPro.csproj"
             }
           }
         }
@@ -2396,11 +2402,17 @@
         "warnAsError": [
           "NU1605"
         ]
-      }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
-      "net7.0": {
-        "targetAlias": "net7.0",
+      "net9.0": {
+        "targetAlias": "net9.0",
         "dependencies": {
           "MSTest.TestAdapter": {
             "target": "Package",
@@ -2435,7 +2447,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.317/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.314/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
