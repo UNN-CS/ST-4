@@ -5,7 +5,7 @@ using System;
 namespace BugTests
 {
     [TestClass]
-    public class BugTests
+    public class BugWorkflowTests
     {
         [TestMethod]
         public void InitialState_ShouldBeNewDefect()
