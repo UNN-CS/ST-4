@@ -13,7 +13,7 @@
   </ItemGroup>
 	<ItemGroup>
 		<Reference Include="Stateless">
-			<HintPath>lib\Stateless.dll</HintPath>
+			<HintPath>lib/Stateless.dll</HintPath>
 		</Reference>
 	</ItemGroup>
   <ItemGroup>
