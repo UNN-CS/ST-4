@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {
+    "net9.0": {
       "Microsoft.ApplicationInsights/2.23.0": {
         "type": "package",
         "dependencies": {
@@ -355,58 +355,58 @@
           "Microsoft.Testing.Platform": "2.0.1"
         },
         "compile": {
-          "lib/net8.0/Microsoft.Testing.Extensions.Telemetry.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.Telemetry.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Testing.Extensions.Telemetry.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.Telemetry.dll": {
             "related": ".xml"
           }
         },
         "resource": {
-          "lib/net8.0/cs/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/cs/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "cs"
           },
-          "lib/net8.0/de/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/de/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "de"
           },
-          "lib/net8.0/es/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/es/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "es"
           },
-          "lib/net8.0/fr/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/fr/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "fr"
           },
-          "lib/net8.0/it/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/it/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "it"
           },
-          "lib/net8.0/ja/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/ja/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "ja"
           },
-          "lib/net8.0/ko/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/ko/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "ko"
           },
-          "lib/net8.0/pl/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/pl/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "pl"
           },
-          "lib/net8.0/pt-BR/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/pt-BR/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "pt-BR"
           },
-          "lib/net8.0/ru/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/ru/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "ru"
           },
-          "lib/net8.0/tr/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/tr/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "tr"
           },
-          "lib/net8.0/zh-Hans/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/zh-Hans/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "zh-Hans"
           },
-          "lib/net8.0/zh-Hant/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
+          "lib/net9.0/zh-Hant/Microsoft.Testing.Extensions.Telemetry.resources.dll": {
             "locale": "zh-Hant"
           }
         },
         "build": {
-          "buildTransitive/net8.0/Microsoft.Testing.Extensions.Telemetry.props": {}
+          "buildTransitive/net9.0/Microsoft.Testing.Extensions.Telemetry.props": {}
         },
         "buildMultiTargeting": {
           "buildMultiTargeting/Microsoft.Testing.Extensions.Telemetry.props": {}
@@ -419,58 +419,58 @@
           "Microsoft.Testing.Platform": "2.0.1"
         },
         "compile": {
-          "lib/net8.0/Microsoft.Testing.Extensions.TrxReport.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.TrxReport.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Testing.Extensions.TrxReport.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.TrxReport.dll": {
             "related": ".xml"
           }
         },
         "resource": {
-          "lib/net8.0/cs/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/cs/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "cs"
           },
-          "lib/net8.0/de/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/de/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "de"
           },
-          "lib/net8.0/es/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/es/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "es"
           },
-          "lib/net8.0/fr/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/fr/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "fr"
           },
-          "lib/net8.0/it/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/it/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "it"
           },
-          "lib/net8.0/ja/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/ja/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "ja"
           },
-          "lib/net8.0/ko/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/ko/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "ko"
           },
-          "lib/net8.0/pl/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/pl/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "pl"
           },
-          "lib/net8.0/pt-BR/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/pt-BR/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "pt-BR"
           },
-          "lib/net8.0/ru/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/ru/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "ru"
           },
-          "lib/net8.0/tr/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/tr/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "tr"
           },
-          "lib/net8.0/zh-Hans/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/zh-Hans/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "zh-Hans"
           },
-          "lib/net8.0/zh-Hant/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
+          "lib/net9.0/zh-Hant/Microsoft.Testing.Extensions.TrxReport.resources.dll": {
             "locale": "zh-Hant"
           }
         },
         "build": {
-          "buildTransitive/net8.0/Microsoft.Testing.Extensions.TrxReport.props": {}
+          "buildTransitive/net9.0/Microsoft.Testing.Extensions.TrxReport.props": {}
         },
         "buildMultiTargeting": {
           "buildMultiTargeting/Microsoft.Testing.Extensions.TrxReport.props": {}
@@ -482,12 +482,12 @@
           "Microsoft.Testing.Platform": "2.0.1"
         },
         "compile": {
-          "lib/net8.0/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.TrxReport.Abstractions.dll": {
             "related": ".xml"
           }
         }
@@ -502,53 +502,53 @@
           "Microsoft.Testing.Platform": "2.0.1"
         },
         "compile": {
-          "lib/net8.0/Microsoft.Testing.Extensions.VSTestBridge.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.VSTestBridge.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Testing.Extensions.VSTestBridge.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.VSTestBridge.dll": {
             "related": ".xml"
           }
         },
         "resource": {
-          "lib/net8.0/cs/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/cs/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "cs"
           },
-          "lib/net8.0/de/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/de/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "de"
           },
-          "lib/net8.0/es/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/es/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "es"
           },
-          "lib/net8.0/fr/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/fr/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "fr"
           },
-          "lib/net8.0/it/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/it/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "it"
           },
-          "lib/net8.0/ja/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/ja/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "ja"
           },
-          "lib/net8.0/ko/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/ko/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "ko"
           },
-          "lib/net8.0/pl/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/pl/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "pl"
           },
-          "lib/net8.0/pt-BR/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/pt-BR/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "pt-BR"
           },
-          "lib/net8.0/ru/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/ru/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "ru"
           },
-          "lib/net8.0/tr/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/tr/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "tr"
           },
-          "lib/net8.0/zh-Hans/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/zh-Hans/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "zh-Hans"
           },
-          "lib/net8.0/zh-Hant/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
+          "lib/net9.0/zh-Hant/Microsoft.Testing.Extensions.VSTestBridge.resources.dll": {
             "locale": "zh-Hant"
           }
         }
@@ -556,59 +556,59 @@
       "Microsoft.Testing.Platform/2.0.1": {
         "type": "package",
         "compile": {
-          "lib/net8.0/Microsoft.Testing.Platform.dll": {
+          "lib/net9.0/Microsoft.Testing.Platform.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Testing.Platform.dll": {
+          "lib/net9.0/Microsoft.Testing.Platform.dll": {
             "related": ".xml"
           }
         },
         "resource": {
-          "lib/net8.0/cs/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/cs/Microsoft.Testing.Platform.resources.dll": {
             "locale": "cs"
           },
-          "lib/net8.0/de/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/de/Microsoft.Testing.Platform.resources.dll": {
             "locale": "de"
           },
-          "lib/net8.0/es/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/es/Microsoft.Testing.Platform.resources.dll": {
             "locale": "es"
           },
-          "lib/net8.0/fr/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/fr/Microsoft.Testing.Platform.resources.dll": {
             "locale": "fr"
           },
-          "lib/net8.0/it/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/it/Microsoft.Testing.Platform.resources.dll": {
             "locale": "it"
           },
-          "lib/net8.0/ja/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/ja/Microsoft.Testing.Platform.resources.dll": {
             "locale": "ja"
           },
-          "lib/net8.0/ko/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/ko/Microsoft.Testing.Platform.resources.dll": {
             "locale": "ko"
           },
-          "lib/net8.0/pl/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/pl/Microsoft.Testing.Platform.resources.dll": {
             "locale": "pl"
           },
-          "lib/net8.0/pt-BR/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/pt-BR/Microsoft.Testing.Platform.resources.dll": {
             "locale": "pt-BR"
           },
-          "lib/net8.0/ru/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/ru/Microsoft.Testing.Platform.resources.dll": {
             "locale": "ru"
           },
-          "lib/net8.0/tr/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/tr/Microsoft.Testing.Platform.resources.dll": {
             "locale": "tr"
           },
-          "lib/net8.0/zh-Hans/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/zh-Hans/Microsoft.Testing.Platform.resources.dll": {
             "locale": "zh-Hans"
           },
-          "lib/net8.0/zh-Hant/Microsoft.Testing.Platform.resources.dll": {
+          "lib/net9.0/zh-Hant/Microsoft.Testing.Platform.resources.dll": {
             "locale": "zh-Hant"
           }
         },
         "build": {
-          "buildTransitive/net8.0/Microsoft.Testing.Platform.props": {},
-          "buildTransitive/net8.0/Microsoft.Testing.Platform.targets": {}
+          "buildTransitive/net9.0/Microsoft.Testing.Platform.props": {},
+          "buildTransitive/net9.0/Microsoft.Testing.Platform.targets": {}
         },
         "buildMultiTargeting": {
           "buildMultiTargeting/Microsoft.Testing.Platform.props": {},
@@ -621,53 +621,53 @@
           "Microsoft.Testing.Platform": "2.0.1"
         },
         "compile": {
-          "lib/net8.0/Microsoft.Testing.Extensions.MSBuild.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.MSBuild.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Testing.Extensions.MSBuild.dll": {
+          "lib/net9.0/Microsoft.Testing.Extensions.MSBuild.dll": {
             "related": ".xml"
           }
         },
         "resource": {
-          "lib/net8.0/cs/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/cs/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "cs"
           },
-          "lib/net8.0/de/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/de/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "de"
           },
-          "lib/net8.0/es/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/es/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "es"
           },
-          "lib/net8.0/fr/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/fr/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "fr"
           },
-          "lib/net8.0/it/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/it/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "it"
           },
-          "lib/net8.0/ja/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/ja/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "ja"
           },
-          "lib/net8.0/ko/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/ko/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "ko"
           },
-          "lib/net8.0/pl/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/pl/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "pl"
           },
-          "lib/net8.0/pt-BR/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/pt-BR/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "pt-BR"
           },
-          "lib/net8.0/ru/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/ru/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "ru"
           },
-          "lib/net8.0/tr/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/tr/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "tr"
           },
-          "lib/net8.0/zh-Hans/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/zh-Hans/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "zh-Hans"
           },
-          "lib/net8.0/zh-Hant/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
+          "lib/net9.0/zh-Hant/Microsoft.Testing.Extensions.MSBuild.resources.dll": {
             "locale": "zh-Hant"
           }
         },
@@ -683,49 +683,49 @@
       "Microsoft.TestPlatform.AdapterUtilities/18.0.0": {
         "type": "package",
         "compile": {
-          "lib/net8.0/Microsoft.TestPlatform.AdapterUtilities.dll": {}
+          "lib/net9.0/Microsoft.TestPlatform.AdapterUtilities.dll": {}
         },
         "runtime": {
-          "lib/net8.0/Microsoft.TestPlatform.AdapterUtilities.dll": {}
+          "lib/net9.0/Microsoft.TestPlatform.AdapterUtilities.dll": {}
         },
         "resource": {
-          "lib/net8.0/cs/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/cs/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "cs"
           },
-          "lib/net8.0/de/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/de/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "de"
           },
-          "lib/net8.0/es/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/es/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "es"
           },
-          "lib/net8.0/fr/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/fr/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "fr"
           },
-          "lib/net8.0/it/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/it/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "it"
           },
-          "lib/net8.0/ja/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/ja/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "ja"
           },
-          "lib/net8.0/ko/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/ko/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "ko"
           },
-          "lib/net8.0/pl/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/pl/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "pl"
           },
-          "lib/net8.0/pt-BR/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/pt-BR/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "pt-BR"
           },
-          "lib/net8.0/ru/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/ru/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "ru"
           },
-          "lib/net8.0/tr/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/tr/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "tr"
           },
-          "lib/net8.0/zh-Hans/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/zh-Hans/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "zh-Hans"
           },
-          "lib/net8.0/zh-Hant/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
+          "lib/net9.0/zh-Hant/Microsoft.TestPlatform.AdapterUtilities.resources.dll": {
             "locale": "zh-Hant"
           }
         }
@@ -990,10 +990,10 @@
           "Microsoft.Testing.Extensions.TrxReport": "2.0.1"
         },
         "compile": {
-          "lib/net8.0/_._": {}
+          "lib/net9.0/_._": {}
         },
         "runtime": {
-          "lib/net8.0/_._": {}
+          "lib/net9.0/_._": {}
         }
       },
       "MSTest.Analyzers/4.0.1": {
@@ -1011,8 +1011,8 @@
           "Microsoft.Testing.Platform.MSBuild": "2.0.1"
         },
         "build": {
-          "buildTransitive/net8.0/MSTest.TestAdapter.props": {},
-          "buildTransitive/net8.0/MSTest.TestAdapter.targets": {}
+          "buildTransitive/net9.0/MSTest.TestAdapter.props": {},
+          "buildTransitive/net9.0/MSTest.TestAdapter.targets": {}
         }
       },
       "MSTest.TestFramework/4.0.1": {
@@ -1021,58 +1021,58 @@
           "MSTest.Analyzers": "4.0.1"
         },
         "compile": {
-          "lib/net8.0/MSTest.TestFramework.dll": {
+          "lib/net9.0/MSTest.TestFramework.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/MSTest.TestFramework.dll": {
+          "lib/net9.0/MSTest.TestFramework.dll": {
             "related": ".xml"
           }
         },
         "resource": {
-          "lib/net8.0/cs/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/cs/MSTest.TestFramework.resources.dll": {
             "locale": "cs"
           },
-          "lib/net8.0/de/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/de/MSTest.TestFramework.resources.dll": {
             "locale": "de"
           },
-          "lib/net8.0/es/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/es/MSTest.TestFramework.resources.dll": {
             "locale": "es"
           },
-          "lib/net8.0/fr/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/fr/MSTest.TestFramework.resources.dll": {
             "locale": "fr"
           },
-          "lib/net8.0/it/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/it/MSTest.TestFramework.resources.dll": {
             "locale": "it"
           },
-          "lib/net8.0/ja/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/ja/MSTest.TestFramework.resources.dll": {
             "locale": "ja"
           },
-          "lib/net8.0/ko/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/ko/MSTest.TestFramework.resources.dll": {
             "locale": "ko"
           },
-          "lib/net8.0/pl/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/pl/MSTest.TestFramework.resources.dll": {
             "locale": "pl"
           },
-          "lib/net8.0/pt-BR/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/pt-BR/MSTest.TestFramework.resources.dll": {
             "locale": "pt-BR"
           },
-          "lib/net8.0/ru/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/ru/MSTest.TestFramework.resources.dll": {
             "locale": "ru"
           },
-          "lib/net8.0/tr/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/tr/MSTest.TestFramework.resources.dll": {
             "locale": "tr"
           },
-          "lib/net8.0/zh-Hans/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/zh-Hans/MSTest.TestFramework.resources.dll": {
             "locale": "zh-Hans"
           },
-          "lib/net8.0/zh-Hant/MSTest.TestFramework.resources.dll": {
+          "lib/net9.0/zh-Hant/MSTest.TestFramework.resources.dll": {
             "locale": "zh-Hant"
           }
         },
         "build": {
-          "buildTransitive/net8.0/MSTest.TestFramework.targets": {}
+          "buildTransitive/net9.0/MSTest.TestFramework.targets": {}
         }
       },
       "Newtonsoft.Json/13.0.3": {
@@ -1210,7 +1210,7 @@
       },
       "BugPro/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
+        "framework": ".NETCoreApp,Version=v9.0",
         "compile": {
           "bin/placeholder/BugPro.dll": {}
         },
@@ -2666,7 +2666,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net8.0": [
+    "net9.0": [
       "BugPro >= 1.0.0",
       "MSTest >= 4.0.1"
     ]
@@ -2693,7 +2693,7 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net8.0"
+        "net9.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -2701,8 +2701,8 @@
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
+        "net9.0": {
+          "targetAlias": "net9.0",
           "projectReferences": {
             "C:\\Users\\Evgenii\\source\\repos\\ST-4\\BugPro\\BugPro.csproj": {
               "projectPath": "C:\\Users\\Evgenii\\source\\repos\\ST-4\\BugPro\\BugPro.csproj"
@@ -2722,8 +2722,8 @@
       }
     },
     "frameworks": {
-      "net8.0": {
-        "targetAlias": "net8.0",
+      "net9.0": {
+        "targetAlias": "net9.0",
         "dependencies": {
           "MSTest": {
             "target": "Package",
