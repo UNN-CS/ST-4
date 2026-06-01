@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BugTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b8025daf5bb76c457d6692cff87f9f61e46e547e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b9d9db7155bb5e6b1038d841fb4068ed5f3640ec")]
 [assembly: System.Reflection.AssemblyProductAttribute("BugTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BugTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
