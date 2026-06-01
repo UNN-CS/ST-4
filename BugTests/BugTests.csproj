@@ -9,6 +9,15 @@
 
   <ItemGroup>
     <PackageReference Include="MSTest" Version="4.0.1" />
+	  
+  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="Stateless">
+			<HintPath>lib\Stateless.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BugPro\BugPro.csproj" />
   </ItemGroup>
 
   <ItemGroup>

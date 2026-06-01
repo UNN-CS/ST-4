@@ -2710,8 +2710,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "BugPro >= 1.0.0",
-      "MSTest >= 4.0.1",
-      "Stateless >= 5.13.0"
+      "MSTest >= 4.0.1"
     ]
   },
   "packageFolders": {
@@ -2771,10 +2770,6 @@
           "MSTest": {
             "target": "Package",
             "version": "[4.0.1, )"
-          },
-          "Stateless": {
-            "target": "Package",
-            "version": "[5.13.0, )"
           }
         },
         "imports": [

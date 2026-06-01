@@ -128,10 +128,6 @@
             "MSTest": {
               "target": "Package",
               "version": "[4.0.1, )"
-            },
-            "Stateless": {
-              "target": "Package",
-              "version": "[5.13.0, )"
             }
           },
           "imports": [

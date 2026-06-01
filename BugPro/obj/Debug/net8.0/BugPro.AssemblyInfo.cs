@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BugPro")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e4337ee1bb74eef028de5c205bccf728094c7da2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+59e285d7165f000ff2bd8a9c33df0a1a3899f4ad")]
 [assembly: System.Reflection.AssemblyProductAttribute("BugPro")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BugPro")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
