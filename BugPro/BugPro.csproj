@@ -8,10 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Stateless">
-      <HintPath>lib/Stateless.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
+	  <Reference Include="Stateless">
+		  <HintPath>../BugPro/lib/Stateless.dll</HintPath>
+	  </Reference>
+
+	  <None Include="../BugPro/lib/Stateless.dll">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  <Link>lib/Stateless.dll</Link>
+	  </None>
   </ItemGroup>
 
 </Project>
