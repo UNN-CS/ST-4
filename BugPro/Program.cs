@@ -4,120 +4,138 @@ namespace BugPro;
 
 public enum BugState
 {
-    NewDefect,
-    DefectTriage,
-    Fixing,
-    NotReproducible,
-    DeferredNoTime,
-    NeedsSeparateDecision,
-    OtherProductProblem,
-    NeedMoreInfo,
-    Returned,
+    Draft,
+    Triage,
+    Assigned,
+    InProgress,
+    CodeReview,
+    ReadyForTest,
+    Testing,
+    WaitingForInfo,
+    Postponed,
+    Duplicate,
+    Rejected,
+    Resolved,
     Closed,
     Reopened
 }
 
 public enum BugTrigger
 {
-    SubmitToTriage,
-    StartFixing,
-    CloseAsNotABug,
-    CloseAsWontFix,
-    CloseAsDuplicate,
-    MarkNotReproducible,
-    DeferNoTime,
-    RequireSeparateDecision,
-    MarkOtherProduct,
-    RequestMoreInfo,
-    ReturnToTriage,
-    ProblemSolved,
-    ReturnAfterFailedFix,
-    ConfirmNotReproducibleOk,
-    RejectNotReproducible,
-    CompleteReturnToTriage,
-    Reopen,
-    EnterTriageAfterReopen
+    Submit,
+    Assign,
+    StartWork,
+    SendToReview,
+    ApproveReview,
+    RequestInfo,
+    ProvideInfo,
+    Defer,
+    Resume,
+    MarkDuplicate,
+    Reject,
+    SendToTesting,
+    PassTesting,
+    FailTesting,
+    Close,
+    Reopen
 }
 
 public sealed class Bug
 {
-    private BugState _state;
-    private readonly StateMachine<BugState, BugTrigger> _machine;
+    private readonly StateMachine<BugState, BugTrigger> machine;
+    private BugState state;
 
-    public Bug(BugState initialState = BugState.NewDefect)
+    public Bug(BugState initialState = BugState.Draft)
     {
-        _state = initialState;
-        _machine = new StateMachine<BugState, BugTrigger>(() => _state, s => _state = s);
-
-        _machine.Configure(BugState.NewDefect)
-            .Permit(BugTrigger.SubmitToTriage, BugState.DefectTriage);
-
-        _machine.Configure(BugState.DefectTriage)
-            .Permit(BugTrigger.StartFixing, BugState.Fixing)
-            .Permit(BugTrigger.CloseAsNotABug, BugState.Closed)
-            .Permit(BugTrigger.CloseAsWontFix, BugState.Closed)
-            .Permit(BugTrigger.CloseAsDuplicate, BugState.Closed)
-            .Permit(BugTrigger.MarkNotReproducible, BugState.NotReproducible)
-            .Permit(BugTrigger.DeferNoTime, BugState.DeferredNoTime)
-            .Permit(BugTrigger.RequireSeparateDecision, BugState.NeedsSeparateDecision)
-            .Permit(BugTrigger.MarkOtherProduct, BugState.OtherProductProblem)
-            .Permit(BugTrigger.RequestMoreInfo, BugState.NeedMoreInfo);
-
-        void ConfigureParkingLot(BugState parked)
-        {
-            _machine.Configure(parked)
-                .Permit(BugTrigger.ReturnToTriage, BugState.DefectTriage)
-                .Permit(BugTrigger.StartFixing, BugState.Fixing);
-        }
-
-        ConfigureParkingLot(BugState.DeferredNoTime);
-        ConfigureParkingLot(BugState.NeedsSeparateDecision);
-        ConfigureParkingLot(BugState.OtherProductProblem);
-        ConfigureParkingLot(BugState.NeedMoreInfo);
-
-        _machine.Configure(BugState.Fixing)
-            .Permit(BugTrigger.MarkNotReproducible, BugState.NotReproducible)
-            .Permit(BugTrigger.RequestMoreInfo, BugState.NeedMoreInfo)
-            .Permit(BugTrigger.ProblemSolved, BugState.Closed)
-            .Permit(BugTrigger.ReturnAfterFailedFix, BugState.Returned);
-
-        _machine.Configure(BugState.NotReproducible)
-            .Permit(BugTrigger.ConfirmNotReproducibleOk, BugState.Closed)
-            .Permit(BugTrigger.RejectNotReproducible, BugState.Returned);
-
-        _machine.Configure(BugState.Returned)
-            .Permit(BugTrigger.CompleteReturnToTriage, BugState.DefectTriage);
-
-        _machine.Configure(BugState.Closed)
-            .Permit(BugTrigger.Reopen, BugState.Reopened);
-
-        _machine.Configure(BugState.Reopened)
-            .Permit(BugTrigger.EnterTriageAfterReopen, BugState.DefectTriage);
+        state = initialState;
+        machine = new StateMachine<BugState, BugTrigger>(() => state, next => state = next);
+        ConfigureWorkflow();
     }
 
-    public BugState State => _machine.State;
+    public BugState State => machine.State;
 
-    public bool CanFire(BugTrigger trigger) => _machine.CanFire(trigger);
+    public bool CanFire(BugTrigger trigger) => machine.CanFire(trigger);
 
-    public void Fire(BugTrigger trigger) => _machine.Fire(trigger);
+    public void Fire(BugTrigger trigger) => machine.Fire(trigger);
+
+    public string StateDescription => Describe(State);
 
     public static string Describe(BugState state) => state switch
     {
-        BugState.NewDefect => "НОВЫЙ ДЕФЕКТ",
-        BugState.DefectTriage => "РАЗБОР ДЕФЕКТОВ",
-        BugState.Fixing => "ИСПРАВЛЕНИЕ",
-        BugState.NotReproducible => "НЕ ВОСПРОИЗВОДИМО",
-        BugState.DeferredNoTime => "НЕТ ВРЕМЕНИ",
-        BugState.NeedsSeparateDecision => "НУЖНО ОТДЕЛЬНОЕ РЕШЕНИЕ",
-        BugState.OtherProductProblem => "ПРОБЛЕМА ДРУГОГО ПРОДУКТА",
-        BugState.NeedMoreInfo => "НУЖНО БОЛЬШЕ ИНФОРМАЦИИ",
-        BugState.Returned => "ВОЗВРАТ",
-        BugState.Closed => "ЗАКРЫТИЕ",
-        BugState.Reopened => "ПЕРЕОТКРЫТИЕ",
+        BugState.Draft => "Draft bug report",
+        BugState.Triage => "Triage",
+        BugState.Assigned => "Assigned to developer",
+        BugState.InProgress => "Fix in progress",
+        BugState.CodeReview => "Code review",
+        BugState.ReadyForTest => "Ready for test",
+        BugState.Testing => "Testing",
+        BugState.WaitingForInfo => "Waiting for information",
+        BugState.Postponed => "Postponed",
+        BugState.Duplicate => "Duplicate",
+        BugState.Rejected => "Rejected",
+        BugState.Resolved => "Resolved",
+        BugState.Closed => "Closed",
+        BugState.Reopened => "Reopened",
         _ => state.ToString()
     };
 
-    public string StateDescription => Describe(State);
+    private void ConfigureWorkflow()
+    {
+        machine.Configure(BugState.Draft)
+            .Permit(BugTrigger.Submit, BugState.Triage);
+
+        machine.Configure(BugState.Triage)
+            .Permit(BugTrigger.Assign, BugState.Assigned)
+            .Permit(BugTrigger.RequestInfo, BugState.WaitingForInfo)
+            .Permit(BugTrigger.Defer, BugState.Postponed)
+            .Permit(BugTrigger.MarkDuplicate, BugState.Duplicate)
+            .Permit(BugTrigger.Reject, BugState.Rejected);
+
+        machine.Configure(BugState.Assigned)
+            .Permit(BugTrigger.StartWork, BugState.InProgress)
+            .Permit(BugTrigger.RequestInfo, BugState.WaitingForInfo)
+            .Permit(BugTrigger.Defer, BugState.Postponed);
+
+        machine.Configure(BugState.InProgress)
+            .Permit(BugTrigger.SendToReview, BugState.CodeReview)
+            .Permit(BugTrigger.RequestInfo, BugState.WaitingForInfo);
+
+        machine.Configure(BugState.CodeReview)
+            .Permit(BugTrigger.ApproveReview, BugState.ReadyForTest)
+            .Permit(BugTrigger.FailTesting, BugState.InProgress);
+
+        machine.Configure(BugState.ReadyForTest)
+            .Permit(BugTrigger.SendToTesting, BugState.Testing);
+
+        machine.Configure(BugState.Testing)
+            .Permit(BugTrigger.PassTesting, BugState.Resolved)
+            .Permit(BugTrigger.FailTesting, BugState.InProgress);
+
+        machine.Configure(BugState.WaitingForInfo)
+            .Permit(BugTrigger.ProvideInfo, BugState.Triage)
+            .Permit(BugTrigger.Defer, BugState.Postponed);
+
+        machine.Configure(BugState.Postponed)
+            .Permit(BugTrigger.Resume, BugState.Triage);
+
+        machine.Configure(BugState.Duplicate)
+            .Permit(BugTrigger.Close, BugState.Closed)
+            .Permit(BugTrigger.Reopen, BugState.Reopened);
+
+        machine.Configure(BugState.Rejected)
+            .Permit(BugTrigger.Close, BugState.Closed)
+            .Permit(BugTrigger.Reopen, BugState.Reopened);
+
+        machine.Configure(BugState.Resolved)
+            .Permit(BugTrigger.Close, BugState.Closed)
+            .Permit(BugTrigger.Reopen, BugState.Reopened);
+
+        machine.Configure(BugState.Closed)
+            .Permit(BugTrigger.Reopen, BugState.Reopened);
+
+        machine.Configure(BugState.Reopened)
+            .Permit(BugTrigger.Submit, BugState.Triage);
+    }
 }
 
 internal static class Program
@@ -126,51 +144,28 @@ internal static class Program
     {
         var bug = new Bug();
 
-        Console.WriteLine("=== Демонстрация workflow баг-репорта (Stateless) ===");
-        Console.WriteLine($"Старт: {bug.StateDescription} ({bug.State})");
+        Console.WriteLine("Bug workflow demo");
+        Print(bug);
 
-        bug.Fire(BugTrigger.SubmitToTriage);
-        Console.WriteLine($"После разбора очереди: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.RequestMoreInfo);
-        Console.WriteLine($"Запрошена информация: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.ReturnToTriage);
-        Console.WriteLine($"Вернулись в разбор: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.StartFixing);
-        Console.WriteLine($"В работе у разработчика: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.RequestMoreInfo);
-        Console.WriteLine($"Из исправления снова нужна информация: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.StartFixing);
-        Console.WriteLine($"Снова в исправлении: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.ReturnAfterFailedFix);
-        Console.WriteLine($"Возврат тестировщика (не решено): {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.CompleteReturnToTriage);
-        Console.WriteLine($"После возврата снова разбор: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.StartFixing);
-        Console.WriteLine($"Снова в работе у разработчика: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.ProblemSolved);
-        Console.WriteLine($"Закрыт как исправленный: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.Reopen);
-        Console.WriteLine($"Переоткрыт: {bug.StateDescription}");
-
-        bug.Fire(BugTrigger.EnterTriageAfterReopen);
-        Console.WriteLine($"Снова на разборе: {bug.StateDescription}");
-
-        Console.WriteLine();
-        Console.WriteLine("Доступные триггеры из текущего состояния:");
-        foreach (BugTrigger t in Enum.GetValues<BugTrigger>())
+        foreach (var trigger in new[]
+                 {
+                     BugTrigger.Submit,
+                     BugTrigger.Assign,
+                     BugTrigger.StartWork,
+                     BugTrigger.SendToReview,
+                     BugTrigger.ApproveReview,
+                     BugTrigger.SendToTesting,
+                     BugTrigger.PassTesting,
+                     BugTrigger.Close
+                 })
         {
-            if (bug.CanFire(t))
-                Console.WriteLine($"  - {t}");
+            bug.Fire(trigger);
+            Print(bug);
         }
+    }
+
+    private static void Print(Bug bug)
+    {
+        Console.WriteLine($"{bug.State}: {bug.StateDescription}");
     }
 }
