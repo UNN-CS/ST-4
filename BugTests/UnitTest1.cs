@@ -6,256 +6,279 @@ namespace BugTests;
 public sealed class UnitTest1
 {
     [TestMethod]
-    public void Initial_state_is_NewDefect()
+    public void New_bug_starts_as_draft()
+    {
+        Assert.AreEqual(BugState.Draft, new Bug().State);
+    }
+
+    [TestMethod]
+    public void Submit_moves_draft_to_triage()
     {
         var bug = new Bug();
-        Assert.AreEqual(BugState.NewDefect, bug.State);
+        bug.Fire(BugTrigger.Submit);
+        Assert.AreEqual(BugState.Triage, bug.State);
     }
 
     [TestMethod]
-    public void SubmitToTriage_moves_to_DefectTriage()
-    {
-        var bug = new Bug();
-        bug.Fire(BugTrigger.SubmitToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
-    }
-
-    [TestMethod]
-    public void From_triage_StartFixing_goes_to_Fixing()
+    public void Assign_moves_triage_to_assigned()
     {
         var bug = Triage();
-        bug.Fire(BugTrigger.StartFixing);
-        Assert.AreEqual(BugState.Fixing, bug.State);
+        bug.Fire(BugTrigger.Assign);
+        Assert.AreEqual(BugState.Assigned, bug.State);
     }
 
     [TestMethod]
-    public void Fixing_ProblemSolved_closes_bug()
+    public void Developer_can_start_work_after_assignment()
     {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.ProblemSolved);
+        var bug = Assigned();
+        bug.Fire(BugTrigger.StartWork);
+        Assert.AreEqual(BugState.InProgress, bug.State);
+    }
+
+    [TestMethod]
+    public void Work_can_be_sent_to_review()
+    {
+        var bug = InProgress();
+        bug.Fire(BugTrigger.SendToReview);
+        Assert.AreEqual(BugState.CodeReview, bug.State);
+    }
+
+    [TestMethod]
+    public void Review_approval_makes_bug_ready_for_test()
+    {
+        var bug = CodeReview();
+        bug.Fire(BugTrigger.ApproveReview);
+        Assert.AreEqual(BugState.ReadyForTest, bug.State);
+    }
+
+    [TestMethod]
+    public void Ready_bug_can_be_sent_to_testing()
+    {
+        var bug = ReadyForTest();
+        bug.Fire(BugTrigger.SendToTesting);
+        Assert.AreEqual(BugState.Testing, bug.State);
+    }
+
+    [TestMethod]
+    public void Passing_tests_resolves_bug()
+    {
+        var bug = Testing();
+        bug.Fire(BugTrigger.PassTesting);
+        Assert.AreEqual(BugState.Resolved, bug.State);
+    }
+
+    [TestMethod]
+    public void Resolved_bug_can_be_closed()
+    {
+        var bug = Resolved();
+        bug.Fire(BugTrigger.Close);
         Assert.AreEqual(BugState.Closed, bug.State);
     }
 
     [TestMethod]
-    public void Full_path_triage_fix_close()
+    public void Failed_testing_returns_to_development()
     {
-        var bug = new Bug();
-        bug.Fire(BugTrigger.SubmitToTriage);
-        bug.Fire(BugTrigger.StartFixing);
-        bug.Fire(BugTrigger.ProblemSolved);
+        var bug = Testing();
+        bug.Fire(BugTrigger.FailTesting);
+        Assert.AreEqual(BugState.InProgress, bug.State);
+    }
+
+    [TestMethod]
+    public void Failed_review_returns_to_development()
+    {
+        var bug = CodeReview();
+        bug.Fire(BugTrigger.FailTesting);
+        Assert.AreEqual(BugState.InProgress, bug.State);
+    }
+
+    [TestMethod]
+    public void Triage_can_request_more_information()
+    {
+        var bug = Triage();
+        bug.Fire(BugTrigger.RequestInfo);
+        Assert.AreEqual(BugState.WaitingForInfo, bug.State);
+    }
+
+    [TestMethod]
+    public void Provided_information_returns_to_triage()
+    {
+        var bug = Triage();
+        bug.Fire(BugTrigger.RequestInfo);
+        bug.Fire(BugTrigger.ProvideInfo);
+        Assert.AreEqual(BugState.Triage, bug.State);
+    }
+
+    [TestMethod]
+    public void Assigned_bug_can_request_more_information()
+    {
+        var bug = Assigned();
+        bug.Fire(BugTrigger.RequestInfo);
+        Assert.AreEqual(BugState.WaitingForInfo, bug.State);
+    }
+
+    [TestMethod]
+    public void In_progress_bug_can_request_more_information()
+    {
+        var bug = InProgress();
+        bug.Fire(BugTrigger.RequestInfo);
+        Assert.AreEqual(BugState.WaitingForInfo, bug.State);
+    }
+
+    [TestMethod]
+    public void Triage_can_postpone_bug()
+    {
+        var bug = Triage();
+        bug.Fire(BugTrigger.Defer);
+        Assert.AreEqual(BugState.Postponed, bug.State);
+    }
+
+    [TestMethod]
+    public void Postponed_bug_can_resume_to_triage()
+    {
+        var bug = Triage();
+        bug.Fire(BugTrigger.Defer);
+        bug.Fire(BugTrigger.Resume);
+        Assert.AreEqual(BugState.Triage, bug.State);
+    }
+
+    [TestMethod]
+    public void Waiting_bug_can_be_deferred()
+    {
+        var bug = Triage();
+        bug.Fire(BugTrigger.RequestInfo);
+        bug.Fire(BugTrigger.Defer);
+        Assert.AreEqual(BugState.Postponed, bug.State);
+    }
+
+    [TestMethod]
+    public void Triage_can_mark_duplicate()
+    {
+        var bug = Triage();
+        bug.Fire(BugTrigger.MarkDuplicate);
+        Assert.AreEqual(BugState.Duplicate, bug.State);
+    }
+
+    [TestMethod]
+    public void Duplicate_can_be_closed()
+    {
+        var bug = Triage();
+        bug.Fire(BugTrigger.MarkDuplicate);
+        bug.Fire(BugTrigger.Close);
         Assert.AreEqual(BugState.Closed, bug.State);
     }
 
     [TestMethod]
-    public void Triage_CloseAsNotABug_closes()
+    public void Triage_can_reject_bug()
     {
         var bug = Triage();
-        bug.Fire(BugTrigger.CloseAsNotABug);
-        Assert.AreEqual(BugState.Closed, bug.State);
+        bug.Fire(BugTrigger.Reject);
+        Assert.AreEqual(BugState.Rejected, bug.State);
     }
 
     [TestMethod]
-    public void Triage_CloseAsWontFix_closes()
+    public void Rejected_bug_can_be_reopened()
     {
         var bug = Triage();
-        bug.Fire(BugTrigger.CloseAsWontFix);
-        Assert.AreEqual(BugState.Closed, bug.State);
-    }
-
-    [TestMethod]
-    public void Triage_CloseAsDuplicate_closes()
-    {
-        var bug = Triage();
-        bug.Fire(BugTrigger.CloseAsDuplicate);
-        Assert.AreEqual(BugState.Closed, bug.State);
-    }
-
-    [TestMethod]
-    public void Fixing_ReturnAfterFailedFix_goes_to_Returned_then_triage()
-    {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.ReturnAfterFailedFix);
-        Assert.AreEqual(BugState.Returned, bug.State);
-        bug.Fire(BugTrigger.CompleteReturnToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
-    }
-
-    [TestMethod]
-    public void Triage_MarkNotReproducible_goes_to_NotReproducible()
-    {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        Assert.AreEqual(BugState.NotReproducible, bug.State);
-    }
-
-    [TestMethod]
-    public void NotReproducible_ConfirmOk_closes()
-    {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        bug.Fire(BugTrigger.ConfirmNotReproducibleOk);
-        Assert.AreEqual(BugState.Closed, bug.State);
-    }
-
-    [TestMethod]
-    public void NotReproducible_Reject_goes_to_Returned_then_triage()
-    {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        bug.Fire(BugTrigger.RejectNotReproducible);
-        Assert.AreEqual(BugState.Returned, bug.State);
-        bug.Fire(BugTrigger.CompleteReturnToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
-    }
-
-    [TestMethod]
-    public void Fixing_can_move_to_NotReproducible()
-    {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        Assert.AreEqual(BugState.NotReproducible, bug.State);
-    }
-
-    [TestMethod]
-    public void Fixing_RequestMoreInfo_goes_to_NeedMoreInfo()
-    {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.RequestMoreInfo);
-        Assert.AreEqual(BugState.NeedMoreInfo, bug.State);
-    }
-
-    [TestMethod]
-    public void Describe_returns_Vozvrat_for_Returned()
-    {
-        Assert.AreEqual("ВОЗВРАТ", Bug.Describe(BugState.Returned));
-    }
-
-    [TestMethod]
-    public void Returned_invalid_StartFixing_throws_InvalidOperationException()
-    {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.ReturnAfterFailedFix);
-        Assert.AreEqual(BugState.Returned, bug.State);
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.StartFixing));
-    }
-
-    [TestMethod]
-    public void DeferNoTime_can_return_to_triage_or_start_fixing()
-    {
-        var bug = Triage();
-        bug.Fire(BugTrigger.DeferNoTime);
-        Assert.AreEqual(BugState.DeferredNoTime, bug.State);
-
-        bug.Fire(BugTrigger.ReturnToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
-
-        bug.Fire(BugTrigger.DeferNoTime);
-        bug.Fire(BugTrigger.StartFixing);
-        Assert.AreEqual(BugState.Fixing, bug.State);
-    }
-
-    [TestMethod]
-    public void NeedsSeparateDecision_round_trip()
-    {
-        var bug = Triage();
-        bug.Fire(BugTrigger.RequireSeparateDecision);
-        Assert.AreEqual(BugState.NeedsSeparateDecision, bug.State);
-        bug.Fire(BugTrigger.ReturnToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
-    }
-
-    [TestMethod]
-    public void OtherProductProblem_can_start_fixing()
-    {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkOtherProduct);
-        bug.Fire(BugTrigger.StartFixing);
-        Assert.AreEqual(BugState.Fixing, bug.State);
-    }
-
-    [TestMethod]
-    public void NeedMoreInfo_StartFixing_is_allowed()
-    {
-        var bug = Triage();
-        bug.Fire(BugTrigger.RequestMoreInfo);
-        bug.Fire(BugTrigger.StartFixing);
-        Assert.AreEqual(BugState.Fixing, bug.State);
-    }
-
-    [TestMethod]
-    public void Closed_Reopen_then_EnterTriage_returns_to_triage()
-    {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.ProblemSolved);
+        bug.Fire(BugTrigger.Reject);
         bug.Fire(BugTrigger.Reopen);
         Assert.AreEqual(BugState.Reopened, bug.State);
-        bug.Fire(BugTrigger.EnterTriageAfterReopen);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
     }
 
     [TestMethod]
-    public void CanFire_is_false_for_disallowed_trigger()
+    public void Reopened_bug_submits_to_triage()
     {
-        var bug = new Bug();
-        Assert.IsFalse(bug.CanFire(BugTrigger.StartFixing));
-    }
-
-    [TestMethod]
-    public void Describe_returns_expected_Russian_label_for_triage()
-    {
-        Assert.AreEqual("РАЗБОР ДЕФЕКТОВ", Bug.Describe(BugState.DefectTriage));
-    }
-
-    [TestMethod]
-    public void NewDefect_invalid_fire_throws_InvalidOperationException_from_Stateless()
-    {
-        var bug = new Bug();
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.ProblemSolved));
-        StringAssert.Contains(ex.Message, BugTrigger.ProblemSolved.ToString(), StringComparison.Ordinal);
-    }
-
-    [TestMethod]
-    public void Closed_invalid_fire_throws_InvalidOperationException_from_Stateless()
-    {
-        var bug = new Bug(BugState.Closed);
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.StartFixing));
-        StringAssert.Contains(ex.Message, BugTrigger.StartFixing.ToString(), StringComparison.Ordinal);
-    }
-
-    [TestMethod]
-    public void Fixing_SubmitToTriage_throws_InvalidOperationException()
-    {
-        var bug = Fixing();
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.SubmitToTriage));
-    }
-
-    [TestMethod]
-    public void Reopened_StartFixing_throws_until_triage_is_entered()
-    {
-        var bug = new Bug(BugState.Closed);
+        var bug = Resolved();
         bug.Fire(BugTrigger.Reopen);
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.StartFixing));
+        bug.Fire(BugTrigger.Submit);
+        Assert.AreEqual(BugState.Triage, bug.State);
     }
 
     [TestMethod]
-    public void NotReproducible_Reopen_throws_InvalidOperationException()
+    public void CanFire_reports_allowed_trigger()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.Reopen));
+        Assert.IsTrue(new Bug().CanFire(BugTrigger.Submit));
+    }
+
+    [TestMethod]
+    public void CanFire_reports_rejected_trigger()
+    {
+        Assert.IsFalse(new Bug().CanFire(BugTrigger.Assign));
+    }
+
+    [TestMethod]
+    public void Description_returns_human_text()
+    {
+        Assert.AreEqual("Testing", Bug.Describe(BugState.Testing));
+    }
+
+    [TestMethod]
+    public void Invalid_fire_from_draft_throws_stateless_exception()
+    {
+        var bug = new Bug();
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.Close));
+    }
+
+    [TestMethod]
+    public void Invalid_fire_from_closed_throws_stateless_exception()
+    {
+        var bug = Resolved();
+        bug.Fire(BugTrigger.Close);
+        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.Assign));
+    }
+
+    [TestMethod]
+    public void Constructor_can_start_from_closed_state()
+    {
+        var bug = new Bug(BugState.Closed);
+        Assert.AreEqual(BugState.Closed, bug.State);
     }
 
     private static Bug Triage()
     {
         var bug = new Bug();
-        bug.Fire(BugTrigger.SubmitToTriage);
+        bug.Fire(BugTrigger.Submit);
         return bug;
     }
 
-    private static Bug Fixing()
+    private static Bug Assigned()
     {
         var bug = Triage();
-        bug.Fire(BugTrigger.StartFixing);
+        bug.Fire(BugTrigger.Assign);
+        return bug;
+    }
+
+    private static Bug InProgress()
+    {
+        var bug = Assigned();
+        bug.Fire(BugTrigger.StartWork);
+        return bug;
+    }
+
+    private static Bug CodeReview()
+    {
+        var bug = InProgress();
+        bug.Fire(BugTrigger.SendToReview);
+        return bug;
+    }
+
+    private static Bug ReadyForTest()
+    {
+        var bug = CodeReview();
+        bug.Fire(BugTrigger.ApproveReview);
+        return bug;
+    }
+
+    private static Bug Testing()
+    {
+        var bug = ReadyForTest();
+        bug.Fire(BugTrigger.SendToTesting);
+        return bug;
+    }
+
+    private static Bug Resolved()
+    {
+        var bug = Testing();
+        bug.Fire(BugTrigger.PassTesting);
         return bug;
     }
 }
