@@ -6,256 +6,264 @@ namespace BugTests;
 public sealed class UnitTest1
 {
     [TestMethod]
-    public void Initial_state_is_NewDefect()
+    public void VerifyInitialStateIsNewDefect()
     {
-        var bug = new Bug();
-        Assert.AreEqual(BugState.NewDefect, bug.State);
+        var activeBug = new Bug();
+        Assert.AreEqual(BugState.NewDefect, activeBug.State);
     }
 
     [TestMethod]
-    public void SubmitToTriage_moves_to_DefectTriage()
+    public void VerifySubmitToTriageChangesStateToDefectTriage()
     {
-        var bug = new Bug();
-        bug.Fire(BugTrigger.SubmitToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
+        var activeBug = new Bug();
+        activeBug.Fire(BugTrigger.SubmitToTriage);
+        Assert.AreEqual(BugState.DefectTriage, activeBug.State);
     }
 
     [TestMethod]
-    public void From_triage_StartFixing_goes_to_Fixing()
+    public void VerifyFromTriageStartFixingTransitionsToFixing()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.StartFixing);
-        Assert.AreEqual(BugState.Fixing, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.StartFixing);
+        Assert.AreEqual(BugState.Fixing, activeBug.State);
     }
 
     [TestMethod]
-    public void Fixing_ProblemSolved_closes_bug()
+    public void VerifyFixingProblemSolvedTransitionsToClosed()
     {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.ProblemSolved);
-        Assert.AreEqual(BugState.Closed, bug.State);
+        var activeBug = CreateBugInFixingState();
+        activeBug.Fire(BugTrigger.ProblemSolved);
+        Assert.AreEqual(BugState.Closed, activeBug.State);
     }
 
     [TestMethod]
-    public void Full_path_triage_fix_close()
+    public void VerifyFullWorkflowFromTriageToFixAndClose()
     {
-        var bug = new Bug();
-        bug.Fire(BugTrigger.SubmitToTriage);
-        bug.Fire(BugTrigger.StartFixing);
-        bug.Fire(BugTrigger.ProblemSolved);
-        Assert.AreEqual(BugState.Closed, bug.State);
+        var activeBug = new Bug();
+        activeBug.Fire(BugTrigger.SubmitToTriage);
+        activeBug.Fire(BugTrigger.StartFixing);
+        activeBug.Fire(BugTrigger.ProblemSolved);
+        Assert.AreEqual(BugState.Closed, activeBug.State);
     }
 
     [TestMethod]
-    public void Triage_CloseAsNotABug_closes()
+    public void VerifyTriageCloseAsNotABugTransitionsToClosed()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.CloseAsNotABug);
-        Assert.AreEqual(BugState.Closed, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.CloseAsNotABug);
+        Assert.AreEqual(BugState.Closed, activeBug.State);
     }
 
     [TestMethod]
-    public void Triage_CloseAsWontFix_closes()
+    public void VerifyTriageCloseAsWontFixTransitionsToClosed()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.CloseAsWontFix);
-        Assert.AreEqual(BugState.Closed, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.CloseAsWontFix);
+        Assert.AreEqual(BugState.Closed, activeBug.State);
     }
 
     [TestMethod]
-    public void Triage_CloseAsDuplicate_closes()
+    public void VerifyTriageCloseAsDuplicateTransitionsToClosed()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.CloseAsDuplicate);
-        Assert.AreEqual(BugState.Closed, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.CloseAsDuplicate);
+        Assert.AreEqual(BugState.Closed, activeBug.State);
     }
 
     [TestMethod]
-    public void Fixing_ReturnAfterFailedFix_goes_to_Returned_then_triage()
+    public void VerifyFailedFixMovesToReturnedThenBackToTriage()
     {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.ReturnAfterFailedFix);
-        Assert.AreEqual(BugState.Returned, bug.State);
-        bug.Fire(BugTrigger.CompleteReturnToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
+        var activeBug = CreateBugInFixingState();
+        activeBug.Fire(BugTrigger.ReturnAfterFailedFix);
+        Assert.AreEqual(BugState.Returned, activeBug.State);
+
+        activeBug.Fire(BugTrigger.CompleteReturnToTriage);
+        Assert.AreEqual(BugState.DefectTriage, activeBug.State);
     }
 
     [TestMethod]
-    public void Triage_MarkNotReproducible_goes_to_NotReproducible()
+    public void VerifyTriageMarkNotReproducibleTransitionsToNotReproducible()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        Assert.AreEqual(BugState.NotReproducible, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.MarkNotReproducible);
+        Assert.AreEqual(BugState.NotReproducible, activeBug.State);
     }
 
     [TestMethod]
-    public void NotReproducible_ConfirmOk_closes()
+    public void VerifyNotReproducibleConfirmOkTransitionsToClosed()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        bug.Fire(BugTrigger.ConfirmNotReproducibleOk);
-        Assert.AreEqual(BugState.Closed, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.MarkNotReproducible);
+        activeBug.Fire(BugTrigger.ConfirmNotReproducibleOk);
+        Assert.AreEqual(BugState.Closed, activeBug.State);
     }
 
     [TestMethod]
-    public void NotReproducible_Reject_goes_to_Returned_then_triage()
+    public void VerifyNotReproducibleRejectMovesToReturnedThenToTriage()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        bug.Fire(BugTrigger.RejectNotReproducible);
-        Assert.AreEqual(BugState.Returned, bug.State);
-        bug.Fire(BugTrigger.CompleteReturnToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.MarkNotReproducible);
+        activeBug.Fire(BugTrigger.RejectNotReproducible);
+        Assert.AreEqual(BugState.Returned, activeBug.State);
+
+        activeBug.Fire(BugTrigger.CompleteReturnToTriage);
+        Assert.AreEqual(BugState.DefectTriage, activeBug.State);
     }
 
     [TestMethod]
-    public void Fixing_can_move_to_NotReproducible()
+    public void VerifyFixingCanTransitionToNotReproducibleState()
     {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        Assert.AreEqual(BugState.NotReproducible, bug.State);
+        var activeBug = CreateBugInFixingState();
+        activeBug.Fire(BugTrigger.MarkNotReproducible);
+        Assert.AreEqual(BugState.NotReproducible, activeBug.State);
     }
 
     [TestMethod]
-    public void Fixing_RequestMoreInfo_goes_to_NeedMoreInfo()
+    public void VerifyFixingRequestMoreInfoTransitionsToNeedMoreInfo()
     {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.RequestMoreInfo);
-        Assert.AreEqual(BugState.NeedMoreInfo, bug.State);
+        var activeBug = CreateBugInFixingState();
+        activeBug.Fire(BugTrigger.RequestMoreInfo);
+        Assert.AreEqual(BugState.NeedMoreInfo, activeBug.State);
     }
 
     [TestMethod]
-    public void Describe_returns_Vozvrat_for_Returned()
+    public void VerifyDescribeMethodReturnsCorrectStringForReturnedState()
     {
-        Assert.AreEqual("ВОЗВРАТ", Bug.Describe(BugState.Returned));
+        string textLabel = Bug.Describe(BugState.Returned);
+        Assert.AreEqual("ВОЗВРАТ", textLabel);
     }
 
     [TestMethod]
-    public void Returned_invalid_StartFixing_throws_InvalidOperationException()
+    public void VerifyReturnedStateThrowsExceptionOnInvalidStartFixingTrigger()
     {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.ReturnAfterFailedFix);
-        Assert.AreEqual(BugState.Returned, bug.State);
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.StartFixing));
+        var activeBug = CreateBugInFixingState();
+        activeBug.Fire(BugTrigger.ReturnAfterFailedFix);
+        Assert.AreEqual(BugState.Returned, activeBug.State);
+
+        Assert.ThrowsException<InvalidOperationException>(() => activeBug.Fire(BugTrigger.StartFixing));
     }
 
     [TestMethod]
-    public void DeferNoTime_can_return_to_triage_or_start_fixing()
+    public void VerifyDeferNoTimeCanCycleToTriageOrFixingState()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.DeferNoTime);
-        Assert.AreEqual(BugState.DeferredNoTime, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.DeferNoTime);
+        Assert.AreEqual(BugState.DeferredNoTime, activeBug.State);
 
-        bug.Fire(BugTrigger.ReturnToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
+        activeBug.Fire(BugTrigger.ReturnToTriage);
+        Assert.AreEqual(BugState.DefectTriage, activeBug.State);
 
-        bug.Fire(BugTrigger.DeferNoTime);
-        bug.Fire(BugTrigger.StartFixing);
-        Assert.AreEqual(BugState.Fixing, bug.State);
+        activeBug.Fire(BugTrigger.DeferNoTime);
+        activeBug.Fire(BugTrigger.StartFixing);
+        Assert.AreEqual(BugState.Fixing, activeBug.State);
     }
 
     [TestMethod]
-    public void NeedsSeparateDecision_round_trip()
+    public void VerifyNeedsSeparateDecisionTransitionsRoundTrip()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.RequireSeparateDecision);
-        Assert.AreEqual(BugState.NeedsSeparateDecision, bug.State);
-        bug.Fire(BugTrigger.ReturnToTriage);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.RequireSeparateDecision);
+        Assert.AreEqual(BugState.NeedsSeparateDecision, activeBug.State);
+
+        activeBug.Fire(BugTrigger.ReturnToTriage);
+        Assert.AreEqual(BugState.DefectTriage, activeBug.State);
     }
 
     [TestMethod]
-    public void OtherProductProblem_can_start_fixing()
+    public void VerifyOtherProductProblemCanTransitionToFixingState()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkOtherProduct);
-        bug.Fire(BugTrigger.StartFixing);
-        Assert.AreEqual(BugState.Fixing, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.MarkOtherProduct);
+        activeBug.Fire(BugTrigger.StartFixing);
+        Assert.AreEqual(BugState.Fixing, activeBug.State);
     }
 
     [TestMethod]
-    public void NeedMoreInfo_StartFixing_is_allowed()
+    public void VerifyNeedMoreInfoStateAllowsStartFixingTrigger()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.RequestMoreInfo);
-        bug.Fire(BugTrigger.StartFixing);
-        Assert.AreEqual(BugState.Fixing, bug.State);
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.RequestMoreInfo);
+        activeBug.Fire(BugTrigger.StartFixing);
+        Assert.AreEqual(BugState.Fixing, activeBug.State);
     }
 
     [TestMethod]
-    public void Closed_Reopen_then_EnterTriage_returns_to_triage()
+    public void VerifyClosedReopenWorkflowReturnsToTriageCorrectly()
     {
-        var bug = Fixing();
-        bug.Fire(BugTrigger.ProblemSolved);
-        bug.Fire(BugTrigger.Reopen);
-        Assert.AreEqual(BugState.Reopened, bug.State);
-        bug.Fire(BugTrigger.EnterTriageAfterReopen);
-        Assert.AreEqual(BugState.DefectTriage, bug.State);
+        var activeBug = CreateBugInFixingState();
+        activeBug.Fire(BugTrigger.ProblemSolved);
+        activeBug.Fire(BugTrigger.Reopen);
+        Assert.AreEqual(BugState.Reopened, activeBug.State);
+
+        activeBug.Fire(BugTrigger.EnterTriageAfterReopen);
+        Assert.AreEqual(BugState.DefectTriage, activeBug.State);
     }
 
     [TestMethod]
-    public void CanFire_is_false_for_disallowed_trigger()
+    public void VerifyCanFireReturnsFalseForInvalidTriggerInCurrentState()
     {
-        var bug = new Bug();
-        Assert.IsFalse(bug.CanFire(BugTrigger.StartFixing));
+        var activeBug = new Bug();
+        bool checkResult = activeBug.CanFire(BugTrigger.StartFixing);
+        Assert.IsFalse(checkResult);
     }
 
     [TestMethod]
-    public void Describe_returns_expected_Russian_label_for_triage()
+    public void VerifyDescribeMethodReturnsCorrectStringForDefectTriage()
     {
-        Assert.AreEqual("РАЗБОР ДЕФЕКТОВ", Bug.Describe(BugState.DefectTriage));
+        string textLabel = Bug.Describe(BugState.DefectTriage);
+        Assert.AreEqual("РАЗБОР ДЕФЕКТОВ", textLabel);
     }
 
     [TestMethod]
-    public void NewDefect_invalid_fire_throws_InvalidOperationException_from_Stateless()
+    public void VerifyNewDefectStateThrowsExceptionOnForbiddenTrigger()
     {
-        var bug = new Bug();
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.ProblemSolved));
-        StringAssert.Contains(ex.Message, BugTrigger.ProblemSolved.ToString(), StringComparison.Ordinal);
+        var activeBug = new Bug();
+        var errorInfo = Assert.ThrowsException<InvalidOperationException>(() => activeBug.Fire(BugTrigger.ProblemSolved));
+        StringAssert.Contains(errorInfo.Message, BugTrigger.ProblemSolved.ToString(), StringComparison.Ordinal);
     }
 
     [TestMethod]
-    public void Closed_invalid_fire_throws_InvalidOperationException_from_Stateless()
+    public void VerifyClosedStateThrowsExceptionOnForbiddenTrigger()
     {
-        var bug = new Bug(BugState.Closed);
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.StartFixing));
-        StringAssert.Contains(ex.Message, BugTrigger.StartFixing.ToString(), StringComparison.Ordinal);
+        var activeBug = new Bug(BugState.Closed);
+        var errorInfo = Assert.ThrowsException<InvalidOperationException>(() => activeBug.Fire(BugTrigger.StartFixing));
+        StringAssert.Contains(errorInfo.Message, BugTrigger.StartFixing.ToString(), StringComparison.Ordinal);
     }
 
     [TestMethod]
-    public void Fixing_SubmitToTriage_throws_InvalidOperationException()
+    public void VerifyFixingStateThrowsExceptionOnForbiddenSubmitToTriageTrigger()
     {
-        var bug = Fixing();
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.SubmitToTriage));
+        var activeBug = CreateBugInFixingState();
+        Assert.ThrowsException<InvalidOperationException>(() => activeBug.Fire(BugTrigger.SubmitToTriage));
     }
 
     [TestMethod]
-    public void Reopened_StartFixing_throws_until_triage_is_entered()
+    public void VerifyReopenedStateThrowsExceptionBeforeEnteringTriageState()
     {
-        var bug = new Bug(BugState.Closed);
-        bug.Fire(BugTrigger.Reopen);
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.StartFixing));
+        var activeBug = new Bug(BugState.Closed);
+        activeBug.Fire(BugTrigger.Reopen);
+        Assert.ThrowsException<InvalidOperationException>(() => activeBug.Fire(BugTrigger.StartFixing));
     }
 
     [TestMethod]
-    public void NotReproducible_Reopen_throws_InvalidOperationException()
+    public void VerifyNotReproducibleStateThrowsExceptionOnForbiddenReopenTrigger()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.MarkNotReproducible);
-        Assert.ThrowsException<InvalidOperationException>(() => bug.Fire(BugTrigger.Reopen));
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.MarkNotReproducible);
+        Assert.ThrowsException<InvalidOperationException>(() => activeBug.Fire(BugTrigger.Reopen));
     }
 
-    private static Bug Triage()
+    private static Bug CreateBugInTriageState()
     {
-        var bug = new Bug();
-        bug.Fire(BugTrigger.SubmitToTriage);
-        return bug;
+        var activeBug = new Bug();
+        activeBug.Fire(BugTrigger.SubmitToTriage);
+        return activeBug;
     }
 
-    private static Bug Fixing()
+    private static Bug CreateBugInFixingState()
     {
-        var bug = Triage();
-        bug.Fire(BugTrigger.StartFixing);
-        return bug;
+        var activeBug = CreateBugInTriageState();
+        activeBug.Fire(BugTrigger.StartFixing);
+        return activeBug;
     }
 }
