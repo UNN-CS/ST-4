@@ -2,119 +2,113 @@ using Stateless;
 
 namespace BugPro;
 
-public enum State
+public enum BugState
 {
-    NewDefect,
-    Analysis,
-    Resolution,
-    Returned,
+    Draft,
+    Triaged,
+    WaitingForReporter,
+    Accepted,
+    InProgress,
+    Verification,
     Closed,
-    Reopened,
-    NeedMoreInfo,
-    Review,
-    OnHold
+    Rejected,
+    Deferred
 }
 
-public enum Trigger
+public enum BugAction
 {
-    Analyze,
+    Submit,
+    AskDetails,
+    AddDetails,
+    Accept,
     Reject,
-    AskInfo,
-    ProvideInfo,
-    StartFix,
-    VerifySuccess,
-    VerifyFailure,
-    ReportCannotReproduce,
-    ReturnForInfo,
-    ContinueFix,
-    ConfirmNotRepro,
-    ConfirmBugExists,
+    StartWork,
+    SendToCheck,
+    ApproveFix,
+    DeclineFix,
     Reopen,
-    AnalyzeAgain,
-    Hold,
-    Resume
+    Postpone,
+    Restore
 }
 
 public class Bug
 {
-    private readonly StateMachine<State, Trigger> _machine;
-    
+    private readonly StateMachine<BugState, BugAction> workflow;
+
     public Bug()
     {
-        _machine = new StateMachine<State, Trigger>(State.NewDefect);
-        
-        _machine.Configure(State.NewDefect)
-            .Permit(Trigger.Analyze, State.Analysis)
-            .Permit(Trigger.Hold, State.OnHold);
-        
-        _machine.Configure(State.Analysis)
-            .Permit(Trigger.Reject, State.Returned)
-            .Permit(Trigger.AskInfo, State.NeedMoreInfo)
-            .Permit(Trigger.StartFix, State.Resolution)
-            .Permit(Trigger.Hold, State.OnHold);
-        
-        _machine.Configure(State.NeedMoreInfo)
-            .Permit(Trigger.ProvideInfo, State.Analysis)
-            .Permit(Trigger.ContinueFix, State.Resolution)
-            .Permit(Trigger.Reject, State.Returned);
-        
-        _machine.Configure(State.Resolution)
-            .Permit(Trigger.VerifySuccess, State.Closed)
-            .Permit(Trigger.VerifyFailure, State.Returned)
-            .Permit(Trigger.ReportCannotReproduce, State.Review)
-            .Permit(Trigger.ReturnForInfo, State.NeedMoreInfo)
-            .Permit(Trigger.Hold, State.OnHold);
-        
-        _machine.Configure(State.Review)
-            .Permit(Trigger.ConfirmNotRepro, State.Closed)
-            .Permit(Trigger.ConfirmBugExists, State.Returned);
-        
-        _machine.Configure(State.Closed)
-            .Permit(Trigger.Reopen, State.Reopened);
-        
-        _machine.Configure(State.Reopened)
-            .Permit(Trigger.AnalyzeAgain, State.Analysis);
-        
-        _machine.Configure(State.Returned)
-            .Permit(Trigger.Analyze, State.Analysis);
-        
-        _machine.Configure(State.OnHold)
-            .Permit(Trigger.Resume, State.Analysis);
+        workflow = new StateMachine<BugState, BugAction>(BugState.Draft);
+
+        workflow.Configure(BugState.Draft)
+            .Permit(BugAction.Submit, BugState.Triaged)
+            .Permit(BugAction.Postpone, BugState.Deferred);
+
+        workflow.Configure(BugState.Triaged)
+            .Permit(BugAction.AskDetails, BugState.WaitingForReporter)
+            .Permit(BugAction.Accept, BugState.Accepted)
+            .Permit(BugAction.Reject, BugState.Rejected)
+            .Permit(BugAction.Postpone, BugState.Deferred);
+
+        workflow.Configure(BugState.WaitingForReporter)
+            .Permit(BugAction.AddDetails, BugState.Triaged)
+            .Permit(BugAction.Reject, BugState.Rejected);
+
+        workflow.Configure(BugState.Accepted)
+            .Permit(BugAction.StartWork, BugState.InProgress)
+            .Permit(BugAction.Postpone, BugState.Deferred);
+
+        workflow.Configure(BugState.InProgress)
+            .Permit(BugAction.SendToCheck, BugState.Verification)
+            .Permit(BugAction.AskDetails, BugState.WaitingForReporter)
+            .Permit(BugAction.Postpone, BugState.Deferred);
+
+        workflow.Configure(BugState.Verification)
+            .Permit(BugAction.ApproveFix, BugState.Closed)
+            .Permit(BugAction.DeclineFix, BugState.InProgress);
+
+        workflow.Configure(BugState.Closed)
+            .Permit(BugAction.Reopen, BugState.Triaged);
+
+        workflow.Configure(BugState.Deferred)
+            .Permit(BugAction.Restore, BugState.Triaged)
+            .Permit(BugAction.Reject, BugState.Rejected);
     }
-    
-    public void Analyze() => _machine.Fire(Trigger.Analyze);
-    public void Reject() => _machine.Fire(Trigger.Reject);
-    public void AskInfo() => _machine.Fire(Trigger.AskInfo);
-    public void ProvideInfo() => _machine.Fire(Trigger.ProvideInfo);
-    public void StartFix() => _machine.Fire(Trigger.StartFix);
-    public void VerifySuccess() => _machine.Fire(Trigger.VerifySuccess);
-    public void VerifyFailure() => _machine.Fire(Trigger.VerifyFailure);
-    public void ReportCannotReproduce() => _machine.Fire(Trigger.ReportCannotReproduce);
-    public void ReturnForInfo() => _machine.Fire(Trigger.ReturnForInfo);
-    public void ContinueFix() => _machine.Fire(Trigger.ContinueFix);
-    public void ConfirmNotRepro() => _machine.Fire(Trigger.ConfirmNotRepro);
-    public void ConfirmBugExists() => _machine.Fire(Trigger.ConfirmBugExists);
-    public void Reopen() => _machine.Fire(Trigger.Reopen);
-    public void AnalyzeAgain() => _machine.Fire(Trigger.AnalyzeAgain);
-    public void Hold() => _machine.Fire(Trigger.Hold);
-    public void Resume() => _machine.Fire(Trigger.Resume);
-    
-    public State CurrentState => _machine.State;
+
+    public BugState CurrentState => workflow.State;
+
+    public bool IsClosed => CurrentState is BugState.Closed or BugState.Rejected;
+
+    public bool Can(BugAction action) => workflow.CanFire(action);
+
+    public void Submit() => workflow.Fire(BugAction.Submit);
+    public void AskDetails() => workflow.Fire(BugAction.AskDetails);
+    public void AddDetails() => workflow.Fire(BugAction.AddDetails);
+    public void Accept() => workflow.Fire(BugAction.Accept);
+    public void Reject() => workflow.Fire(BugAction.Reject);
+    public void StartWork() => workflow.Fire(BugAction.StartWork);
+    public void SendToCheck() => workflow.Fire(BugAction.SendToCheck);
+    public void ApproveFix() => workflow.Fire(BugAction.ApproveFix);
+    public void DeclineFix() => workflow.Fire(BugAction.DeclineFix);
+    public void Reopen() => workflow.Fire(BugAction.Reopen);
+    public void Postpone() => workflow.Fire(BugAction.Postpone);
+    public void Restore() => workflow.Fire(BugAction.Restore);
 }
 
-class Program
+internal static class Program
 {
-    static void Main()
+    private static void Main()
     {
-        Console.WriteLine("=== Демонстрация Workflow бага ===\n");
         var bug = new Bug();
-        Console.WriteLine($"1. Новый дефект: {bug.CurrentState}");
-        bug.Analyze();
-        Console.WriteLine($"2. После анализа: {bug.CurrentState}");
-        bug.StartFix();
-        Console.WriteLine($"3. Начато исправление: {bug.CurrentState}");
-        bug.VerifySuccess();
-        Console.WriteLine($"4. Проверка успешна: {bug.CurrentState}");
-        Console.WriteLine("\n=== Дефект успешно исправлен ===");
+
+        Console.WriteLine("Bug workflow demo");
+        Console.WriteLine($"Created: {bug.CurrentState}");
+
+        bug.Submit();
+        bug.Accept();
+        bug.StartWork();
+        bug.SendToCheck();
+        bug.ApproveFix();
+
+        Console.WriteLine($"Finished: {bug.CurrentState}");
     }
 }
