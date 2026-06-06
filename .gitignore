@@ -1,0 +1,14 @@
+# Build folders
+**/bin/
+**/obj/
+
+# Test results
+**/TestResults/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# MSTest
+*.trx
