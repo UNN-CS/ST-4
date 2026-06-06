@@ -1,0 +1,9 @@
+.vs/
+bin/
+obj/
+out/
+build/
+*.suo
+*.user
+*.log
+.DS_Store
