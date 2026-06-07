@@ -2,7 +2,7 @@ using Stateless;
 
 namespace BugPro;
 
-public enum TicketPhase
+public enum BugStatus
 {
     New,
     Analysis,
@@ -16,7 +16,7 @@ public enum TicketPhase
     Deferred
 }
 
-public enum WorkflowSignal
+public enum BugTrigger
 {
     StartAnalysis,
     RequestInfo,
@@ -33,134 +33,185 @@ public enum WorkflowSignal
 
 public sealed class Bug
 {
-    private TicketPhase phase;
-    private readonly StateMachine<TicketPhase, WorkflowSignal> workflow;
+    private BugStatus _status;
+    private readonly StateMachine<BugStatus, BugTrigger> _fsm;
 
     public Bug()
     {
-        phase = TicketPhase.New;
-        workflow = new StateMachine<TicketPhase, WorkflowSignal>(
-            () => phase,
-            value => phase = value);
+        _status = BugStatus.New;
+        _fsm = new StateMachine<BugStatus, BugTrigger>(
+            () => _status,
+            value => _status = value);
 
-        RegisterTransitions();
+        InitStateMachine();
     }
 
-    public TicketPhase State => phase;
+    public BugStatus State => _status;
 
-    public void StartAnalysis() => Fire(WorkflowSignal.StartAnalysis);
-
-    public void RequestInfo() => Fire(WorkflowSignal.RequestInfo);
-
-    public void MarkDuplicate() => Fire(WorkflowSignal.MarkDuplicate);
-
-    public void MarkNotReproducible() => Fire(WorkflowSignal.MarkNotReproducible);
-
-    public void StartFix() => Fire(WorkflowSignal.StartFix);
-
-    public void Fix() => Fire(WorkflowSignal.Fix);
-
-    public void ConfirmResolved() => Fire(WorkflowSignal.ConfirmResolved);
-
-    public void RejectFix() => Fire(WorkflowSignal.RejectFix);
-
-    public void Reopen() => Fire(WorkflowSignal.Reopen);
-
-    public void Defer() => Fire(WorkflowSignal.Defer);
-
-    public void ReturnToAnalysis() => Fire(WorkflowSignal.ReturnToAnalysis);
-
-    public bool CanStartAnalysis() => workflow.CanFire(WorkflowSignal.StartAnalysis);
-
-    public bool CanFix() => workflow.CanFire(WorkflowSignal.Fix);
-
-    public bool CanClose() => workflow.CanFire(WorkflowSignal.ConfirmResolved);
-
-    public bool CanReopen() => workflow.CanFire(WorkflowSignal.Reopen);
-
-    public bool CanReturnToAnalysis() => workflow.CanFire(WorkflowSignal.ReturnToAnalysis);
-
-    private void Fire(WorkflowSignal signal) => workflow.Fire(signal);
-
-    private void RegisterTransitions()
+    public void StartAnalysis()
     {
-        ConfigureNewPhase();
-        ConfigureAnalysisPhase();
-        ConfigureNeedMoreInfoPhase();
-        ConfigureInProgressPhase();
-        ConfigureFixedPhase();
-        ConfigureClosedPhase();
-        ConfigureReopenedPhase();
-        ConfigureDeferredPhase();
-        ConfigureTerminalPhases();
+        Trigger(BugTrigger.StartAnalysis);
     }
 
-    private void ConfigureNewPhase()
+    public void RequestInfo()
     {
-        workflow.Configure(TicketPhase.New)
-            .Permit(WorkflowSignal.StartAnalysis, TicketPhase.Analysis)
-            .Permit(WorkflowSignal.Defer, TicketPhase.Deferred);
+        Trigger(BugTrigger.RequestInfo);
     }
 
-    private void ConfigureAnalysisPhase()
+    public void MarkDuplicate()
     {
-        workflow.Configure(TicketPhase.Analysis)
-            .Permit(WorkflowSignal.RequestInfo, TicketPhase.NeedMoreInfo)
-            .Permit(WorkflowSignal.MarkDuplicate, TicketPhase.Duplicate)
-            .Permit(WorkflowSignal.MarkNotReproducible, TicketPhase.NotReproducible)
-            .Permit(WorkflowSignal.StartFix, TicketPhase.InProgress)
-            .Permit(WorkflowSignal.Defer, TicketPhase.Deferred);
+        Trigger(BugTrigger.MarkDuplicate);
     }
 
-    private void ConfigureNeedMoreInfoPhase()
+    public void MarkNotReproducible()
     {
-        workflow.Configure(TicketPhase.NeedMoreInfo)
-            .Permit(WorkflowSignal.ReturnToAnalysis, TicketPhase.Analysis)
-            .Permit(WorkflowSignal.Defer, TicketPhase.Deferred);
+        Trigger(BugTrigger.MarkNotReproducible);
     }
 
-    private void ConfigureInProgressPhase()
+    public void StartFix()
     {
-        workflow.Configure(TicketPhase.InProgress)
-            .Permit(WorkflowSignal.Fix, TicketPhase.Fixed)
-            .Permit(WorkflowSignal.ReturnToAnalysis, TicketPhase.Analysis)
-            .Permit(WorkflowSignal.Defer, TicketPhase.Deferred);
+        Trigger(BugTrigger.StartFix);
     }
 
-    private void ConfigureFixedPhase()
+    public void Fix()
     {
-        workflow.Configure(TicketPhase.Fixed)
-            .Permit(WorkflowSignal.ConfirmResolved, TicketPhase.Closed)
-            .Permit(WorkflowSignal.RejectFix, TicketPhase.Reopened);
+        Trigger(BugTrigger.Fix);
     }
 
-    private void ConfigureClosedPhase()
+    public void ConfirmResolved()
     {
-        workflow.Configure(TicketPhase.Closed)
-            .Permit(WorkflowSignal.Reopen, TicketPhase.Reopened);
+        Trigger(BugTrigger.ConfirmResolved);
     }
 
-    private void ConfigureReopenedPhase()
+    public void RejectFix()
     {
-        workflow.Configure(TicketPhase.Reopened)
-            .Permit(WorkflowSignal.ReturnToAnalysis, TicketPhase.Analysis)
-            .Permit(WorkflowSignal.StartFix, TicketPhase.InProgress)
-            .Permit(WorkflowSignal.Defer, TicketPhase.Deferred);
+        Trigger(BugTrigger.RejectFix);
     }
 
-    private void ConfigureDeferredPhase()
+    public void Reopen()
     {
-        workflow.Configure(TicketPhase.Deferred)
-            .Permit(WorkflowSignal.ReturnToAnalysis, TicketPhase.Analysis);
+        Trigger(BugTrigger.Reopen);
     }
 
-    private void ConfigureTerminalPhases()
+    public void Defer()
     {
-        workflow.Configure(TicketPhase.Duplicate)
-            .Permit(WorkflowSignal.ConfirmResolved, TicketPhase.Closed);
+        Trigger(BugTrigger.Defer);
+    }
 
-        workflow.Configure(TicketPhase.NotReproducible)
-            .Permit(WorkflowSignal.ConfirmResolved, TicketPhase.Closed);
+    public void ReturnToAnalysis()
+    {
+        Trigger(BugTrigger.ReturnToAnalysis);
+    }
+
+    public bool CanStartAnalysis()
+    {
+        return _fsm.CanFire(BugTrigger.StartAnalysis);
+    }
+
+    public bool CanFix()
+    {
+        return _fsm.CanFire(BugTrigger.Fix);
+    }
+
+    public bool CanClose()
+    {
+        return _fsm.CanFire(BugTrigger.ConfirmResolved);
+    }
+
+    public bool CanReopen()
+    {
+        return _fsm.CanFire(BugTrigger.Reopen);
+    }
+
+    public bool CanReturnToAnalysis()
+    {
+        return _fsm.CanFire(BugTrigger.ReturnToAnalysis);
+    }
+
+    private void Trigger(BugTrigger action)
+    {
+        _fsm.Fire(action);
+    }
+
+    private void InitStateMachine()
+    {
+        BindNewState();
+        BindAnalysisState();
+        BindNeedMoreInfoState();
+        BindInProgressState();
+        BindFixedState();
+        BindClosedState();
+        BindReopenedState();
+        BindDeferredState();
+        BindTerminalStates();
+    }
+
+    private void BindNewState()
+    {
+        _fsm.Configure(BugStatus.New)
+            .Permit(BugTrigger.StartAnalysis, BugStatus.Analysis)
+            .Permit(BugTrigger.Defer, BugStatus.Deferred);
+    }
+
+    private void BindAnalysisState()
+    {
+        _fsm.Configure(BugStatus.Analysis)
+            .Permit(BugTrigger.RequestInfo, BugStatus.NeedMoreInfo)
+            .Permit(BugTrigger.MarkDuplicate, BugStatus.Duplicate)
+            .Permit(BugTrigger.MarkNotReproducible, BugStatus.NotReproducible)
+            .Permit(BugTrigger.StartFix, BugStatus.InProgress)
+            .Permit(BugTrigger.Defer, BugStatus.Deferred);
+    }
+
+    private void BindNeedMoreInfoState()
+    {
+        _fsm.Configure(BugStatus.NeedMoreInfo)
+            .Permit(BugTrigger.ReturnToAnalysis, BugStatus.Analysis)
+            .Permit(BugTrigger.Defer, BugStatus.Deferred);
+    }
+
+    private void BindInProgressState()
+    {
+        _fsm.Configure(BugStatus.InProgress)
+            .Permit(BugTrigger.Fix, BugStatus.Fixed)
+            .Permit(BugTrigger.ReturnToAnalysis, BugStatus.Analysis)
+            .Permit(BugTrigger.Defer, BugStatus.Deferred);
+    }
+
+    private void BindFixedState()
+    {
+        _fsm.Configure(BugStatus.Fixed)
+            .Permit(BugTrigger.ConfirmResolved, BugStatus.Closed)
+            .Permit(BugTrigger.RejectFix, BugStatus.Reopened);
+    }
+
+    private void BindClosedState()
+    {
+        _fsm.Configure(BugStatus.Closed)
+            .Permit(BugTrigger.Reopen, BugStatus.Reopened);
+    }
+
+    private void BindReopenedState()
+    {
+        _fsm.Configure(BugStatus.Reopened)
+            .Permit(BugTrigger.ReturnToAnalysis, BugStatus.Analysis)
+            .Permit(BugTrigger.StartFix, BugStatus.InProgress)
+            .Permit(BugTrigger.Defer, BugStatus.Deferred);
+    }
+
+    private void BindDeferredState()
+    {
+        _fsm.Configure(BugStatus.Deferred)
+            .Permit(BugTrigger.ReturnToAnalysis, BugStatus.Analysis);
+    }
+
+    private void BindTerminalStates()
+    {
+        _fsm.Configure(BugStatus.Duplicate)
+            .Permit(BugTrigger.ConfirmResolved, BugStatus.Closed);
+
+        _fsm.Configure(BugStatus.NotReproducible)
+            .Permit(BugTrigger.ConfirmResolved, BugStatus.Closed);
     }
 }
 
@@ -168,19 +219,19 @@ internal static class Program
 {
     private static void Main()
     {
-        var ticket = new Bug();
+        var instance = new Bug();
 
-        PrintState(ticket, "created");
-        ticket.StartAnalysis();
-        PrintState(ticket, "analysis started");
-        ticket.StartFix();
-        ticket.Fix();
-        ticket.ConfirmResolved();
-        PrintState(ticket, "resolved and closed");
+        LogStatus(instance, "создан");
+        instance.StartAnalysis();
+        LogStatus(instance, "анализ");
+        instance.StartFix();
+        instance.Fix();
+        instance.ConfirmResolved();
+        LogStatus(instance, "закрыт");
     }
 
-    private static void PrintState(Bug ticket, string stage)
+    private static void LogStatus(Bug instance, string caption)
     {
-        Console.WriteLine($"[{stage}] phase = {ticket.State}");
+        Console.WriteLine($"== {caption} => {instance.State} ==");
     }
 }

@@ -4,306 +4,311 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BugTests;
 
 [TestClass]
-public sealed class BugWorkflowTests
+public sealed class BugLifecycleTests
 {
-    private Bug subject = null!;
+    private Bug _bug = null!;
 
     [TestInitialize]
-    public void CreateFreshBug()
+    public void SetUp()
     {
-        subject = new Bug();
+        _bug = new Bug();
     }
 
     [TestCleanup]
-    public void ReleaseSubject()
+    public void TearDown()
     {
-        subject = null!;
+        _bug = null!;
+    }
+
+    #region Старт
+
+    [TestMethod]
+    public void OnCreate_StatusIsNew()
+    {
+        CheckStatus(BugStatus.New);
     }
 
     [TestMethod]
-    public void FreshTicketStartsInNewPhase()
+    public void OnCreate_CanStartAnalysis()
     {
-        AssertPhase(TicketPhase.New);
+        Assert.IsTrue(_bug.CanStartAnalysis());
     }
 
     [TestMethod]
-    public void NewTicketAllowsAnalysisStart()
+    public void OnCreate_CannotFix()
     {
-        Assert.IsTrue(subject.CanStartAnalysis());
+        Assert.IsFalse(_bug.CanFix());
     }
 
     [TestMethod]
-    public void AnalysisStartUpdatesPhase()
+    public void OnCreate_CannotClose()
     {
-        subject.StartAnalysis();
-
-        AssertPhase(TicketPhase.Analysis);
+        Assert.IsFalse(_bug.CanClose());
     }
 
     [TestMethod]
-    public void InfoRequestFromAnalysisGoesToNeedMoreInfo()
+    public void OnCreate_CannotReopen()
     {
-        EnterAnalysis();
-        subject.RequestInfo();
+        Assert.IsFalse(_bug.CanReopen());
+    }
 
-        AssertPhase(TicketPhase.NeedMoreInfo);
+    #endregion
+
+    #region Анализ и уточнение
+
+    [TestMethod]
+    public void AfterStartAnalysis_StatusIsAnalysis()
+    {
+        _bug.StartAnalysis();
+        CheckStatus(BugStatus.Analysis);
     }
 
     [TestMethod]
-    public void NeedMoreInfoAllowsReturnToAnalysis()
+    public void AfterRequestInfo_StatusIsNeedMoreInfo()
     {
-        EnterNeedMoreInfo();
-
-        Assert.IsTrue(subject.CanReturnToAnalysis());
+        MoveToAnalysis();
+        _bug.RequestInfo();
+        CheckStatus(BugStatus.NeedMoreInfo);
     }
 
     [TestMethod]
-    public void ReturnFromNeedMoreInfoRestoresAnalysis()
+    public void InNeedMoreInfo_CanReturnToAnalysis()
     {
-        EnterNeedMoreInfo();
-        subject.ReturnToAnalysis();
-
-        AssertPhase(TicketPhase.Analysis);
+        MoveToNeedMoreInfo();
+        Assert.IsTrue(_bug.CanReturnToAnalysis());
     }
 
     [TestMethod]
-    public void FixWorkBeginsFromAnalysis()
+    public void AfterReturnFromNeedMoreInfo_StatusIsAnalysis()
     {
-        EnterAnalysis();
-        subject.StartFix();
-
-        AssertPhase(TicketPhase.InProgress);
+        MoveToNeedMoreInfo();
+        _bug.ReturnToAnalysis();
+        CheckStatus(BugStatus.Analysis);
     }
 
     [TestMethod]
-    public void InProgressTicketCanBeFixed()
+    public void AfterStartFix_StatusIsInProgress()
     {
-        EnterInProgress();
+        MoveToAnalysis();
+        _bug.StartFix();
+        CheckStatus(BugStatus.InProgress);
+    }
 
-        Assert.IsTrue(subject.CanFix());
+    #endregion
+
+    #region Исправление
+
+    [TestMethod]
+    public void InProgress_CanFix()
+    {
+        MoveToInProgress();
+        Assert.IsTrue(_bug.CanFix());
     }
 
     [TestMethod]
-    public void FixActionSetsFixedPhase()
+    public void AfterFix_StatusIsFixed()
     {
-        EnterInProgress();
-        subject.Fix();
-
-        AssertPhase(TicketPhase.Fixed);
+        MoveToInProgress();
+        _bug.Fix();
+        CheckStatus(BugStatus.Fixed);
     }
 
     [TestMethod]
-    public void FixedTicketCanBeClosed()
+    public void InFixed_CanClose()
     {
-        EnterFixed();
-
-        Assert.IsTrue(subject.CanClose());
+        MoveToFixed();
+        Assert.IsTrue(_bug.CanClose());
     }
 
     [TestMethod]
-    public void ConfirmResolvedClosesTicket()
+    public void AfterConfirmResolved_StatusIsClosed()
     {
-        EnterFixed();
-        subject.ConfirmResolved();
+        MoveToFixed();
+        _bug.ConfirmResolved();
+        CheckStatus(BugStatus.Closed);
+    }
 
-        AssertPhase(TicketPhase.Closed);
+    #endregion
+
+    #region Переоткрытие
+
+    [TestMethod]
+    public void InClosed_CanReopen()
+    {
+        MoveToClosed();
+        Assert.IsTrue(_bug.CanReopen());
     }
 
     [TestMethod]
-    public void ClosedTicketCanReopen()
+    public void AfterReopen_StatusIsReopened()
     {
-        EnterClosed();
-
-        Assert.IsTrue(subject.CanReopen());
+        MoveToClosed();
+        _bug.Reopen();
+        CheckStatus(BugStatus.Reopened);
     }
 
     [TestMethod]
-    public void ReopenFromClosedSetsReopenedPhase()
+    public void AfterRejectFix_StatusIsReopened()
     {
-        EnterClosed();
-        subject.Reopen();
-
-        AssertPhase(TicketPhase.Reopened);
+        MoveToFixed();
+        _bug.RejectFix();
+        CheckStatus(BugStatus.Reopened);
     }
 
     [TestMethod]
-    public void RejectFixFromFixedSetsReopenedPhase()
+    public void FromReopened_ReturnToAnalysis()
     {
-        EnterFixed();
-        subject.RejectFix();
-
-        AssertPhase(TicketPhase.Reopened);
+        MoveToReopened();
+        _bug.ReturnToAnalysis();
+        CheckStatus(BugStatus.Analysis);
     }
 
     [TestMethod]
-    public void ReopenedTicketReturnsToAnalysis()
+    public void FromReopened_ResumeFix()
     {
-        EnterReopened();
-        subject.ReturnToAnalysis();
+        MoveToReopened();
+        _bug.StartFix();
+        CheckStatus(BugStatus.InProgress);
+    }
 
-        AssertPhase(TicketPhase.Analysis);
+    #endregion
+
+    #region Дубликат и не воспроизводится
+
+    [TestMethod]
+    public void AfterMarkDuplicate_StatusIsDuplicate()
+    {
+        MoveToAnalysis();
+        _bug.MarkDuplicate();
+        CheckStatus(BugStatus.Duplicate);
     }
 
     [TestMethod]
-    public void ReopenedTicketCanResumeFix()
+    public void FromDuplicate_CloseTicket()
     {
-        EnterReopened();
-        subject.StartFix();
-
-        AssertPhase(TicketPhase.InProgress);
+        MoveToAnalysis();
+        _bug.MarkDuplicate();
+        _bug.ConfirmResolved();
+        CheckStatus(BugStatus.Closed);
     }
 
     [TestMethod]
-    public void DuplicateMarkFromAnalysis()
+    public void AfterMarkNotReproducible_StatusIsNotReproducible()
     {
-        EnterAnalysis();
-        subject.MarkDuplicate();
-
-        AssertPhase(TicketPhase.Duplicate);
+        MoveToAnalysis();
+        _bug.MarkNotReproducible();
+        CheckStatus(BugStatus.NotReproducible);
     }
 
     [TestMethod]
-    public void DuplicateTicketCanBeClosed()
+    public void FromNotReproducible_CloseTicket()
     {
-        EnterAnalysis();
-        subject.MarkDuplicate();
-        subject.ConfirmResolved();
+        MoveToAnalysis();
+        _bug.MarkNotReproducible();
+        _bug.ConfirmResolved();
+        CheckStatus(BugStatus.Closed);
+    }
 
-        AssertPhase(TicketPhase.Closed);
+    #endregion
+
+    #region Отложен
+
+    [TestMethod]
+    public void AfterDefer_StatusIsDeferred()
+    {
+        _bug.Defer();
+        CheckStatus(BugStatus.Deferred);
     }
 
     [TestMethod]
-    public void NotReproducibleMarkFromAnalysis()
+    public void FromDeferred_ReturnToAnalysis()
     {
-        EnterAnalysis();
-        subject.MarkNotReproducible();
+        _bug.Defer();
+        _bug.ReturnToAnalysis();
+        CheckStatus(BugStatus.Analysis);
+    }
 
-        AssertPhase(TicketPhase.NotReproducible);
+    #endregion
+
+    #region Запрещённые переходы
+
+    [TestMethod]
+    public void FixFromNew_Throws()
+    {
+        ExpectFailure(() => _bug.Fix());
     }
 
     [TestMethod]
-    public void NotReproducibleTicketCanBeClosed()
+    public void CloseFromAnalysis_Throws()
     {
-        EnterAnalysis();
-        subject.MarkNotReproducible();
-        subject.ConfirmResolved();
-
-        AssertPhase(TicketPhase.Closed);
+        MoveToAnalysis();
+        ExpectFailure(() => _bug.ConfirmResolved());
     }
 
     [TestMethod]
-    public void NewTicketCanBeDeferred()
+    public void ReopenFromFixed_Throws()
     {
-        subject.Defer();
-
-        AssertPhase(TicketPhase.Deferred);
+        MoveToFixed();
+        ExpectFailure(() => _bug.Reopen());
     }
 
     [TestMethod]
-    public void DeferredTicketReturnsToAnalysis()
+    public void StartAnalysisFromClosed_Throws()
     {
-        subject.Defer();
-        subject.ReturnToAnalysis();
-
-        AssertPhase(TicketPhase.Analysis);
+        MoveToClosed();
+        ExpectFailure(() => _bug.StartAnalysis());
     }
 
     [TestMethod]
-    public void NewTicketCannotBeFixedYet()
+    public void ReturnToAnalysisFromNew_Throws()
     {
-        Assert.IsFalse(subject.CanFix());
+        ExpectFailure(() => _bug.ReturnToAnalysis());
     }
 
-    [TestMethod]
-    public void NewTicketCannotBeClosedYet()
+    #endregion
+
+    private void CheckStatus(BugStatus expected)
     {
-        Assert.IsFalse(subject.CanClose());
+        Assert.AreEqual(expected, _bug.State);
     }
 
-    [TestMethod]
-    public void NewTicketCannotReopenYet()
-    {
-        Assert.IsFalse(subject.CanReopen());
-    }
-
-    [TestMethod]
-    public void FixFromNewRaisesInvalidOperation()
-    {
-        AssertInvalidTransition(() => subject.Fix());
-    }
-
-    [TestMethod]
-    public void CloseFromAnalysisRaisesInvalidOperation()
-    {
-        EnterAnalysis();
-
-        AssertInvalidTransition(() => subject.ConfirmResolved());
-    }
-
-    [TestMethod]
-    public void ReopenFromFixedRaisesInvalidOperation()
-    {
-        EnterFixed();
-
-        AssertInvalidTransition(() => subject.Reopen());
-    }
-
-    [TestMethod]
-    public void AnalysisFromClosedRaisesInvalidOperation()
-    {
-        EnterClosed();
-
-        AssertInvalidTransition(() => subject.StartAnalysis());
-    }
-
-    [TestMethod]
-    public void ReturnToAnalysisFromNewRaisesInvalidOperation()
-    {
-        AssertInvalidTransition(() => subject.ReturnToAnalysis());
-    }
-
-    private void AssertPhase(TicketPhase expected)
-    {
-        Assert.AreEqual(expected, subject.State);
-    }
-
-    private static void AssertInvalidTransition(Action action)
+    private static void ExpectFailure(Action action)
     {
         Assert.ThrowsException<InvalidOperationException>(action);
     }
 
-    private void EnterAnalysis()
+    private void MoveToAnalysis()
     {
-        subject.StartAnalysis();
+        _bug.StartAnalysis();
     }
 
-    private void EnterNeedMoreInfo()
+    private void MoveToNeedMoreInfo()
     {
-        EnterAnalysis();
-        subject.RequestInfo();
+        MoveToAnalysis();
+        _bug.RequestInfo();
     }
 
-    private void EnterInProgress()
+    private void MoveToInProgress()
     {
-        EnterAnalysis();
-        subject.StartFix();
+        MoveToAnalysis();
+        _bug.StartFix();
     }
 
-    private void EnterFixed()
+    private void MoveToFixed()
     {
-        EnterInProgress();
-        subject.Fix();
+        MoveToInProgress();
+        _bug.Fix();
     }
 
-    private void EnterClosed()
+    private void MoveToClosed()
     {
-        EnterFixed();
-        subject.ConfirmResolved();
+        MoveToFixed();
+        _bug.ConfirmResolved();
     }
 
-    private void EnterReopened()
+    private void MoveToReopened()
     {
-        EnterFixed();
-        subject.RejectFix();
+        MoveToFixed();
+        _bug.RejectFix();
     }
 }
