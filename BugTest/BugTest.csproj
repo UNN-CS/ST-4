@@ -1,22 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<ItemGroup>
+		<Reference Include="Stateless">
+			<HintPath>../BugPro/lib/Stateless.dll</HintPath>
+		</Reference>
+		<None Include="../BugPro/lib/Stateless.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<Link>lib/Stateless.dll</Link>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MSTest" Version="4.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BugPro\BugPro.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\BugPro\BugPro.csproj" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.2.0" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.2.0" />
+	</ItemGroup>
 </Project>
